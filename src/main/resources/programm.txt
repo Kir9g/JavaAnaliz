@@ -1,0 +1,3 @@
+begin 101001b 1234567O 12345678
+1e+5 0.3E-1 /*\n\t adadadada12313*/ /***/ && || NEQ as
+end
