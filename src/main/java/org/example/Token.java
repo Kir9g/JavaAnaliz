@@ -1,6 +1,6 @@
 package org.example;
 
-public class Lexem {
+public class Token {
     private String tableid;
     private String value;
 
@@ -12,7 +12,7 @@ public class Lexem {
         this.tableid = tableid;
     }
 
-    public Lexem(String tableid, String value) {
+    public Token(String tableid, String value) {
         this.tableid = tableid;
         this.value = value;
     }
@@ -27,7 +27,7 @@ public class Lexem {
 
     @Override
     public String toString() {
-        return "('" + tableid +
-                ", " + value + ")";
+        return "(" + tableid +
+                "," + value + ")";
     }
 }

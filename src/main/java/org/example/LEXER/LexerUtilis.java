@@ -1,7 +1,7 @@
-package org.example;
+package org.example.LEXER;
 
-import static org.example.Lexer.TL;
-import static org.example.Lexer.TW;
+import static org.example.LEXER.Lexer.TL;
+import static org.example.LEXER.Lexer.TW;
 
 public class LexerUtilis {
     public static void loadTW(){

@@ -1,3 +1,5 @@
-begin 101001b 1234567O 12345678
-1e+5 0.3E-1 /*\n\t adadadada12313*/ /***/ && || NEQ as
-end
+begin var dim x, y, result int; x as 10
+ y as 20: result as x add y; writeln result
+  if x LOWT y then result as x add 5 else result as y add 5
+   writeln result; for i as 1 to 3 do result as result add i
+    writeln result; while result GRT 0 do result as result disa 1; writeln result; end

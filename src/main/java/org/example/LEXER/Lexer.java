@@ -1,14 +1,19 @@
-package org.example;
+package org.example.LEXER;
+
+import org.example.SINTAX.Syntax;
+import org.example.Token;
+import org.example.STATES.States;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.example.States.*;
+import static org.example.STATES.States.*;
 
 public class Lexer {
     static States state = H;
@@ -24,12 +29,12 @@ public class Lexer {
 
     static char CH;
     static String S = "";
-    static List<Lexem> lexemes = new ArrayList<>();
+    static List<Token> lexemes = new ArrayList<>();
     static int z = 0;
-    static HashMap<String,Integer> TW = new HashMap<>();
-    static HashMap<String,Integer> TL = new HashMap<>();
-    static HashMap<String,Integer> TI = new HashMap<>();
-    static HashMap<String,Integer> TN = new HashMap<>();
+    static HashMap<String,Integer> TW = new HashMap<>();//1
+    static HashMap<String,Integer> TL = new HashMap<>();//2
+    static HashMap<String,Integer> TI = new HashMap<>();//4
+    static HashMap<String,Integer> TN = new HashMap<>();//3
     static {
         LexerUtilis.start();
     }
@@ -121,10 +126,15 @@ public class Lexer {
                             state = H;
                             break;
                         }else {
-                            put(TI);
-                            out(4,z);
-                            state = H;
-                            break;
+                            look(TI);
+                            if (z!=0){
+                                out(4,z);
+                                state = H;
+                            }else {
+                                put(TI);
+                                out(4, z);
+                                state = H;
+                            }
                         }
                     }
                 }
@@ -178,8 +188,9 @@ public class Lexer {
                         add();
                         gc();
                         state = B;
-                    }
-                    else{
+                    } else if (CH == ' '|| CH == '\t' || TlCheck()) {
+                        state = D;
+                    } else{
                         state = ER;
                     }
                 }
@@ -224,12 +235,8 @@ public class Lexer {
                         gc();
                         state = HX;
                     }
-                    else if(CH=='\t' && CH== ' '){
-                        gc();
+                    else if(CH=='\t' || CH== ' '|| TlCheck()){
                         state = D;
-                    }
-                    else if(CH =='\n'){
-                        state =D;
                     }
                     else{
                         state = ER;
@@ -272,15 +279,27 @@ public class Lexer {
                         state = D;
 
                     }
-                    else if(CH=='\t' && CH== ' '){
-                        put(TN);
-                        out(3,z);
-                        state = D;
+                    else if(CH=='\t' || CH== ' '){
+                        look(TN);
+                        if (z!=0){
+                            out(3,z);
+                            state = H;
+                        }else {
+                            put(TN);
+                            out(3, z);
+                            state = H;
+                        }
                     }
-                    else if(CH == '\n'){
-                        put(TN);
-                        out(3,z);
-                        state = H;
+                    else if(TlCheck()){
+                        look(TN);
+                        if (z!=0){
+                            out(3,z);
+                            state = H;
+                        }else {
+                            put(TN);
+                            out(3, z);
+                            state = H;
+                        }
                     }
                     else {
                         state = ER;
@@ -291,13 +310,15 @@ public class Lexer {
                     while (digit()||LowerCh>='a'&& LowerCh<='f'){
                         add();
                         gc();
+                        if (let()){
+                            LowerCh = Character.toLowerCase(CH);
+                        }
                     }
                     if (LowerCh == 'h'){
                         add();
                         gc();
                         state = HX;
                     }
-
                     else {
                         state = ER;
                     }
@@ -313,16 +334,22 @@ public class Lexer {
                         gc();
                         state = HX;
                     }
-                    else if(CH!='\t' && CH== ' '){
+                    else if(CH=='\t' || CH== ' '){
                         gc();
                         put(TN);
                         out(3,z);
                         state = H;
                     }
                     else if(CH == '\n'){
-                        put(TN);
-                        out(3,z);
-                        state = H;
+                        look(TN);
+                        if(z!=0) {
+                            out(3, z);
+                            state = H;
+                        }else {
+                            put(TN);
+                            out(3, z);
+                            state = H;
+                        }
                     }
                     else {
                         state = ER;
@@ -338,18 +365,24 @@ public class Lexer {
                     else if (digit()||(lowerCH>='a'&&lowerCH<='f')) {
                         add();
                         gc();
-                        state = HX;
+                        state = N16;
                     }
-                    else if(CH!='\t' && CH== ' '){
+                    else if(CH=='\t' || CH== ' '){
                         gc();
                         put(TN);
                         out(3,z);
                         state = H;
                     }
-                    else if(CH == '\n'){
-                        put(TN);
-                        out(3,z);
-                        state = H;
+                    else if(TlCheck()){
+                        look(TN);
+                        if(z!=0) {
+                            out(3, z);
+                            state = H;
+                        }else {
+                            put(TN);
+                            out(3, z);
+                            state = H;
+                        }
                     }
                     else {
                         state = ER;
@@ -357,14 +390,27 @@ public class Lexer {
                 }
                 case O, HX -> {
                     if(CH == ' '||CH=='\t'){
-                        put(TN);
-                        out(3,z);
-                        state = H;
+                        look(TN);
+                        if(z!=0) {
+                            out(3, z);
+                            state = H;
+                        }else {
+                            put(TN);
+                            out(3, z);
+                            state = H;
+                        }
+                        gc();
                     }
                     else if(CH == '\n'){
-                        put(TN);
-                        out(3,z);
-                        state = H;
+                        look(TN);
+                        if(z!=0) {
+                            out(3, z);
+                            state = H;
+                        }else {
+                            put(TN);
+                            out(3, z);
+                            state = H;
+                        }
                     }
                     else {
                         state = ER;
@@ -383,14 +429,27 @@ public class Lexer {
                     }
                     else if(CH == ' '||CH=='\t'){
                         gc();
-                        put(TN);
-                        out(3,z);
-                        state = H;
+                        look(TN);
+                        if(z!=0){
+                            put(TN);
+                            out(3,z);
+                            state = H;
+                        }else {
+                            put(TN);
+                            out(3,z);
+                            state = H;
+                        }
                     }
                     else if(CH == '\n'){
-                        put(TN);
-                        out(3,z);
-                        state = H;
+                        look(TN);
+                        if(z!=0) {
+                            out(3, z);
+                            state = H;
+                        }else {
+                            put(TN);
+                            out(3, z);
+                            state = H;
+                        }
                     }
                     else {
                         state = ER;
@@ -411,9 +470,15 @@ public class Lexer {
                             out(3,z);
                             state = H;
                         }else if(CH == '\n'){
-                            put(TN);
-                            out(3,z);
-                            state = H;
+                            look(TN);
+                            if(z!= 0) {
+                                out(3, z);
+                                state = H;
+                            }else {
+                                put(TN);
+                                out(3,z);
+                                state = H;
+                            }
                         }else {
                             state = ER;
                         }
@@ -424,13 +489,26 @@ public class Lexer {
                         }
                         if(CH == ' '&& CH=='\t'){
                             gc();
-                            put(TN);
-                            out(3,z);
-                            state = H;
+                            look(TN);
+                            if(z!=0) {
+                                out(3, z);
+                                state = H;
+                            }else {
+                                put(TN);
+                                out(3, z);
+                                state = H;
+                            }
                         }else if(CH == '\n'){
-                            put(TN);
-                            out(3,z);
-                            state = H;
+                            look(TN);
+                            if(z!=0) {
+                                out(3, z);
+                                state = H;
+                            }else {
+                                put(TN);
+                                out(3, z);
+                                state = H;
+                            }
+                            gc();
                         }else {
                             state = ER;
                         }
@@ -447,13 +525,25 @@ public class Lexer {
                         }
                         if(CH == ' '|| CH=='\t'){
                             gc();
-                            put(TN);
-                            out(3,z);
-                            state = H;
+                            look(TN);
+                            if(z!=0) {
+                                out(3, z);
+                                state = H;
+                            }else {
+                                put(TN);
+                                out(3,z);
+                                state = H;
+                            }
                         }else if(CH == '\n'){
-                            put(TN);
-                            out(3,z);
-                            state = H;
+                            look(TN);
+                            if(z!=0) {
+                                out(3, z);
+                                state = H;
+                            }else {
+                                put(TN);
+                                out(3, z);
+                                state = H;
+                            }
                         }else {
                             state = ER;
                         }
@@ -474,13 +564,25 @@ public class Lexer {
                         }
                         else if (CH == ' '||CH == '\t'){
                             gc();
-                            put(TN);
-                            out(3,z);
-                            state = H;
+                            look(TN);
+                            if (z!=0) {
+                                out(3, z);
+                                state = H;
+                            }else {
+                                put(TN);
+                                out(3,z);
+                                state = H;
+                            }
                         }else if(CH == '\n'){
-                            put(TN);
-                            out(3,z);
-                            state = H;
+                            look(TN);
+                            if(z!=0) {
+                                out(3, z);
+                                state = H;
+                            }else {
+                                put(TN);
+                                out(3, z);
+                                state = H;
+                            }
                         }else {
                             state = ER;
                         }
@@ -562,6 +664,19 @@ public class Lexer {
                 }
             }
         }
+        fileInputStream.close();
+        FileOutputStream outputStream = new FileOutputStream("src/main/resources/lexem.txt");
+
+        // Преобразование списка в строку без скобок и запятых
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Token token : lexemes) {
+            stringBuilder.append(token.toString()); // Добавляем токены с пробелом между ними
+        }
+        String tokenString = stringBuilder.toString().trim(); // Убираем лишний пробел в конце
+
+        // Запись в файл
+        outputStream.write(tokenString.getBytes());
+        outputStream.close();
     }
 
 
@@ -620,8 +735,16 @@ public class Lexer {
     }
     static void out(Integer tableNumb, Integer valueNumb) {
         printLex(tableNumb, valueNumb);
-        Lexem lexem = new Lexem(tableNumb.toString(),valueNumb.toString());
-        lexemes.add(lexem);
+        Token token = new Token(tableNumb.toString(),valueNumb.toString());
+        lexemes.add(token);
+    }
+
+    static boolean TlCheck(){
+        if(TL.containsKey(String.valueOf(CH))){
+            return true;
+        }else {
+            return false;
+        }
     }
 
     static void printLex(Integer t, Integer v){

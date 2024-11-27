@@ -1,4 +1,4 @@
-package org.example;
+package org.example.STATES;
 
 public enum States {
     H,//начало
