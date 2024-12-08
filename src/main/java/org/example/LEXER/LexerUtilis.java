@@ -16,7 +16,7 @@ public class LexerUtilis {
         TW.put("then", 9);
         TW.put("else", 10);
         TW.put("read", 11);
-        TW.put("writeln", 12);
+        TW.put("write", 12);
         TW.put("for", 13);
         TW.put("while", 14);
         TW.put("do", 15);
@@ -41,6 +41,8 @@ public class LexerUtilis {
         TL.put(":", 16);
         TL.put("as", 17);
         TL.put(";", 18);
+        TL.put("(",19);
+        TL.put(")",20);
     }
     public static void start(){
         loadTW();

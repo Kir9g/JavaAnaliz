@@ -31,10 +31,10 @@ public class Lexer {
     static String S = "";
     static List<Token> lexemes = new ArrayList<>();
     static int z = 0;
-    static HashMap<String,Integer> TW = new HashMap<>();//1
-    static HashMap<String,Integer> TL = new HashMap<>();//2
-    static HashMap<String,Integer> TI = new HashMap<>();//4
-    static HashMap<String,Integer> TN = new HashMap<>();//3
+    public static HashMap<String,Integer> TW = new HashMap<>();//1
+    public static HashMap<String,Integer> TL = new HashMap<>();//2
+    public static HashMap<String,Integer> TI = new HashMap<>();//4
+    public static HashMap<String,Integer> TN = new HashMap<>();//3
     static {
         LexerUtilis.start();
     }
@@ -79,7 +79,7 @@ public class Lexer {
                         nill();
                         add();
                         gc();
-                        state = NEF;
+                        state = VESH;
                     }else if (CH =='/'){
                         gc();
                         state = C1;
@@ -258,11 +258,6 @@ public class Lexer {
                         gc();
                         state = NEF;
                     }
-                    else if(lowerCH == 'o'){
-                        add();
-                        gc();
-                        state = O;
-                    }
                     else if(lowerCH == 'h'){
                         add();
                         gc();
@@ -340,7 +335,7 @@ public class Lexer {
                         out(3,z);
                         state = H;
                     }
-                    else if(CH == '\n'){
+                    else if(TlCheck()){
                         look(TN);
                         if(z!=0) {
                             out(3, z);
@@ -389,7 +384,7 @@ public class Lexer {
                     }
                 }
                 case O, HX -> {
-                    if(CH == ' '||CH=='\t'){
+                    if(CH == ' '||CH=='\t' || CH =='/'){
                         look(TN);
                         if(z!=0) {
                             out(3, z);
@@ -399,9 +394,9 @@ public class Lexer {
                             out(3, z);
                             state = H;
                         }
-                        gc();
+
                     }
-                    else if(CH == '\n'){
+                    else if(TlCheck()){
                         look(TN);
                         if(z!=0) {
                             out(3, z);
@@ -425,7 +420,7 @@ public class Lexer {
                     if(lowerCH == 'e'){
                         add();
                         gc();
-                        state = NEF1;
+                        state = NEF;
                     }
                     else if(CH == ' '||CH=='\t'){
                         gc();
@@ -440,7 +435,7 @@ public class Lexer {
                             state = H;
                         }
                     }
-                    else if(CH == '\n'){
+                    else if(TlCheck()){
                         look(TN);
                         if(z!=0) {
                             out(3, z);
@@ -469,7 +464,7 @@ public class Lexer {
                             put(TN);
                             out(3,z);
                             state = H;
-                        }else if(CH == '\n'){
+                        }else if(TlCheck()){
                             look(TN);
                             if(z!= 0) {
                                 out(3, z);
@@ -498,7 +493,7 @@ public class Lexer {
                                 out(3, z);
                                 state = H;
                             }
-                        }else if(CH == '\n'){
+                        }else if(TlCheck()){
                             look(TN);
                             if(z!=0) {
                                 out(3, z);
@@ -522,7 +517,9 @@ public class Lexer {
                         while (digit()){
                             add();
                             gc();
+                            lowerCH = Character.toLowerCase(CH);
                         }
+                        lowerCH = Character.toLowerCase(CH);
                         if(CH == ' '|| CH=='\t'){
                             gc();
                             look(TN);
@@ -534,7 +531,7 @@ public class Lexer {
                                 out(3,z);
                                 state = H;
                             }
-                        }else if(CH == '\n'){
+                        }else if(TlCheck()){
                             look(TN);
                             if(z!=0) {
                                 out(3, z);
@@ -553,6 +550,7 @@ public class Lexer {
                             add();
                             gc();
                         }
+                        lowerCH = Character.toLowerCase(CH);
                         if (lowerCH=='h'){
                             add();
                             gc();
@@ -573,7 +571,7 @@ public class Lexer {
                                 out(3,z);
                                 state = H;
                             }
-                        }else if(CH == '\n'){
+                        }else if(TlCheck()){
                             look(TN);
                             if(z!=0) {
                                 out(3, z);
@@ -655,7 +653,7 @@ public class Lexer {
 
                 case ER -> {
                     fileInputStream.close();
-                    System.out.println("ER");
+                    System.err.println("ER");
                     break;
                 }
                 case V ->{
@@ -664,19 +662,24 @@ public class Lexer {
                 }
             }
         }
-        fileInputStream.close();
-        FileOutputStream outputStream = new FileOutputStream("src/main/resources/lexem.txt");
+        if(state == V) {
+            fileInputStream.close();
+            FileOutputStream outputStream = new FileOutputStream("src/main/resources/lexem.txt");
 
-        // Преобразование списка в строку без скобок и запятых
-        StringBuilder stringBuilder = new StringBuilder();
-        for (Token token : lexemes) {
-            stringBuilder.append(token.toString()); // Добавляем токены с пробелом между ними
+            // Преобразование списка в строку без скобок и запятых
+            StringBuilder stringBuilder = new StringBuilder();
+            for (Token token : lexemes) {
+                stringBuilder.append(token.toString()); // Добавляем токены с пробелом между ними
+            }
+            String tokenString = stringBuilder.toString().trim(); // Убираем лишний пробел в конце
+
+            // Запись в файл
+            outputStream.write(tokenString.getBytes());
+            outputStream.close();
+        }else {
+            fileInputStream.close();
+            System.out.println("ОШИБКА");
         }
-        String tokenString = stringBuilder.toString().trim(); // Убираем лишний пробел в конце
-
-        // Запись в файл
-        outputStream.write(tokenString.getBytes());
-        outputStream.close();
     }
 
 

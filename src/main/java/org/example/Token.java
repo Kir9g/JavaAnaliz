@@ -4,6 +4,11 @@ public class Token {
     private String tableid;
     private String value;
 
+    public Token(int first, int second) {
+        this.tableid = String.valueOf(first);
+        this.value = String.valueOf(second);
+    }
+
     public String getTableid() {
         return tableid;
     }
