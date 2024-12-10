@@ -21,6 +21,8 @@ public class LexerUtilis {
         TW.put("while", 14);
         TW.put("do", 15);
         TW.put("to", 16);
+        TW.put("true",17);
+        TW.put("false",18);
     }
     public static void loadTL(){
         TL.put("NEQ", 1);

@@ -11,6 +11,6 @@ import java.util.List;
 public class Syntax {
     public static void run() throws IOException {
         ParserTree parserTree = new ParserTree("src/main/resources/lexem.txt");
-        parserTree.Parse();
+        Node parentNode = ParserTree.parse();
     }
 }

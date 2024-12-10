@@ -37,7 +37,7 @@ public class ParserTree {
         }
     }
 
-    public void Parse() throws IOException {
+    public void Node() throws IOException {
         tokens = gc(fileInputStream);
         currentIndex = 0;
         Programm();  // Вызываем процедуру программы
@@ -85,21 +85,23 @@ public class ParserTree {
 
     }
 
-    public void Programm() {
+    public Node Programm() {
         //<программа>::= begin var <описание> {; <оператор>} end
-        System.out.println(tokens.get(currentIndex).toString());
+        Node programmNode = new Node("Programm");
         if (tokens.get(currentIndex).toString().equals("(1,2)")) { // begin
             gl(); // Переход к следующему токену
+            programmNode.addChild(new Node("begin"));
             if (tokens.get(currentIndex).toString().equals("(1,3)")) { // var
                 gl();
-                description();
+                Node description = description();
                 gl();
             } else {
                 System.out.println("Нету токена var"+tokens.get(currentIndex).toString());
             }
             while (!tokens.get(currentIndex).toString().equals("(1,1)")) {
                 if (currentToken.equals("(2,18)")) {
-                    compoundOperator();
+                    Node operatorNode = compoundOperator();
+                    programmNode.addChild(operatorNode);
                 }else {
                     System.err.println("Ожидалось ;, а получили " + currentToken);
                     System.err.println(previousToken+currentToken);
@@ -108,6 +110,7 @@ public class ParserTree {
             }
             if (tokens.get(currentIndex).toString().equals("(1,1)")){
                 System.out.println("Закончено");
+                programmNode.addChild(new Node("end"));
             }else {
                 System.err.println("Нету end");
                 System.exit(1);
@@ -116,31 +119,38 @@ public class ParserTree {
             System.err.println("Нету токена begin");
             System.exit(1);
         }
+        return programmNode;
     }
-    public void description(){
+    public Node description(){
         //<описание>::= dim <идентификатор> {, <идентификатор> } <тип>
+        Node descriptionNode = new Node("Description");
         if(tokens.get(currentIndex).toString().equals("(1,4)")){//dim
             gl();
-            identificator();
+            Node identifierNode = identificator();
+            descriptionNode.addChild(identifierNode);
             gl();
             while (tokens.get(currentIndex).toString().equals("(2,15)")){// ,
                 if(tokens.get(currentIndex).toString().equals("(2,15)")){
                     gl();
                 }
-                identificator();
+                identifierNode = identificator();
+                descriptionNode.addChild(identifierNode);
                 gl();
             }
-            type();
+            Node typeNode = type();
+            descriptionNode.addChild(typeNode);
         }else {
             System.err.println("Вмессто dim "+ tokens.get(currentIndex).toString());
             System.exit(1);
         }
+        return descriptionNode;
     }
-    public void identificator(){
+    public Node identificator(){
         //<идентификатор>::= <буква> {<буква> | <цифра>}
+        Node identificatorNode = new Node("Identifier");
         if(tokens.get(currentIndex).getTableid().equals("4")){
             if (TI.containsValue(Integer.valueOf(tokens.get(currentIndex).getValue()))){
-                System.out.println("Идентификатор " +tokens.get(currentIndex).toString());
+                return new Node("Identifier", currentToken.toString());
             }else {
                 System.err.println("Такого нет идентификатораа " + tokens.get(currentIndex).toString());
                 System.exit(1);
@@ -149,55 +159,70 @@ public class ParserTree {
             System.err.println("Не идентификатор");
             System.exit(1);
         }
+        return null;
     }
-    public void type(){
+    public Node type(){
         //<тип>::= int | float | bool
+        Node typeNode = new Node("Type");
         if(tokens.get(currentIndex).toString().equals("(1,5)")){
-            System.out.println("int");
+            typeNode.addChild(new Node("int"));
         }else if(tokens.get(currentIndex).toString().equals("(1,6)")){
-            System.out.println("float");
+            typeNode.addChild(new Node("float"));
         }else if(tokens.get(currentIndex).toString().equals("(1,7)")){
-            System.out.println("bool");
+            typeNode.addChild(new Node("bool"));
         }else {
             System.err.println("Не тип данных");
             System.exit(1);
         }
+        return typeNode;
     }
-    public void operator() {
+    public Node operator() {
             /*<оператор>::= <составной> | <присваивания> | <условный> |
             <фиксированного_цикла> | <условного_цикла> | <ввода> |
             <вывода>*/
+        Node operatorNode = new Node("operator");
         gl();
         if (tokens.get(currentIndex).toString().equals("(1,8)")) { // if
-            conditionalOperator(); // Разбор условного оператора
+            Node conditionalOperatorNode = conditionalOperator();// Разбор условного оператора
+            operatorNode.addChild(conditionalOperatorNode);
         }else if(tokens.get(currentIndex).toString().equals("(1,13)")){//for
-            fixedOperator();
+            Node fixedOperarNode = fixedOperator();
+            operatorNode.addChild(fixedOperarNode);
         }
         else if(tokens.get(currentIndex).toString().equals("(1,14)")){//while
-            conditionalloop();
+            Node conditionalloopNode = conditionalloop();
+            operatorNode.addChild(conditionalloopNode);
         }
         else if (tokens.get(currentIndex).getTableid().equals("4")) { // идентификатор
-            assignmentOperator(); // Разбор оператора присваивания
+            Node assignmentOperatorNode = assignmentOperator(); // Разбор оператора присваивания
+            operatorNode.addChild(assignmentOperatorNode);
         } else if (currentToken.equals("(1,12)")) { // write
-            outputOperator(); // Разбор оператора вывода
+            Node outputOperatorNode = outputOperator(); // Разбор оператора вывода
+            operatorNode.addChild(outputOperatorNode);
         } else if (currentToken.equals("(1,11)")) { // read
-            inputOperator(); // Разбор оператора ввода
+            Node inputOperatorNode = inputOperator(); // Разбор оператора ввода
+            operatorNode.addChild(inputOperatorNode);
         } else {
             System.err.println("Неизвестный оператор: " + tokens.get(currentIndex));
             System.exit(1);
         }
+        return operatorNode;
     }
-    public void fixedOperator(){//фикссированный
+    public Node fixedOperator(){//фикссированный
         //<фиксированного_цикла>::= for <присваивания> to <выражение> do
         //<оператор>
         gl();
+        Node fixedOperatorNode = new Node("fixdOperator");
         System.out.println("Фиксированный");
-        assignmentOperator();
+        Node assignmentOperatorNode = assignmentOperator();
+        fixedOperatorNode.addChild(assignmentOperatorNode);
         if (currentToken.equals("(1,16)")){//to
             gl();
-            expression();
+            Node expressionNode = expression();
+            fixedOperatorNode.addChild(expressionNode);
             if(currentToken.equals("(1,15)")){//do
-                operator();
+                Node operatorNode = operator();
+                fixedOperatorNode.addChild(operatorNode);
             }else {
                 System.err.println("Ожидалось do, а получили "+ tokens.get(currentIndex).toString());
                 System.exit(1);
@@ -206,66 +231,87 @@ public class ParserTree {
             System.err.println("Ожидалось to, а получили "+ tokens.get(currentIndex).toString());
             System.exit(1);
         }
+        return fixedOperatorNode;
     }
 
-    public void compoundOperator() {
+    public Node compoundOperator() {
         //<составной>::= <оператор> { ( : | перевод строки) <оператор> }
-        operator(); // Обработка первого оператора
+        Node compoundOperatorNode = null;
+        Node operatorNode = operator();// Обработка первого оператора
         if((currentToken.equals("(2,16)") || // ":" (код 16)
                 currentToken.equals("(2,13)"))) { // перевод строки (код 13))
             while (currentToken.equals("(2,16)") || // ":" (код 16)
                     currentToken.equals("(2,13)")) { // перевод строки (код 13)
-                        operator(); // Обрабатываем следующий оператор
+                compoundOperatorNode = new Node("compoundOperator");
+                compoundOperatorNode.addChild(operatorNode);
+                operatorNode = operator(); // Обрабатываем следующий оператор
             }
+            return compoundOperatorNode;
         }
+        return operatorNode;
     }
-    public void conditionalOperator(){//условный
+    public Node conditionalOperator(){//условный
         //<условный>::= if <выражение> then <оператор> [ else <оператор>]
         gl();
-        expression();
+        Node conditionalOperatornNode = new Node("conditionalOperator");
+        Node expressionNode = expression();
+        conditionalOperatornNode.addChild(expressionNode);
         if(currentToken.equals("(1,9)")){//then
-            operator();
+            Node operatorNode = operator();
+            conditionalOperatornNode.addChild(operatorNode);
             if(currentToken.equals("(1,10)")){//else
-                operator();
+                operatorNode = operator();
+                conditionalOperatornNode.addChild(operatorNode);
             }
         }else {
             System.err.println("Ожидался then, " + currentToken);
             System.exit(1);
         }
+        return conditionalOperatornNode;
     }
-    public void assignmentOperator(){//оператора присваивания
+    public Node assignmentOperator(){//оператора присваивания
         //<присваивания>::= <идентификатор> as <выражение>
-        identificator();
+        Node assignmentOperatorNode = new Node("assignmentOperator");
+        Node identificatorNode = identificator();
+        assignmentOperatorNode.addChild(identificatorNode);
         gl();
-        System.out.println(previousToken + " "+ currentToken);
         if(currentToken.equals("(2,17)")){//as
             gl();
             System.out.println("as "+currentToken.toString());
-            expression();
+            Node expressionNode = expression();
+            assignmentOperatorNode.addChild(expressionNode);
         }else {
             System.err.println("Ожидалось as, а получили "+tokens.get(currentIndex).toString());
             System.exit(1);
         }
+        return assignmentOperatorNode;
     }
-    public void conditionalloop(){
+    public Node conditionalloop(){
+        Node conditionalloopNode = new Node("conditionalloop");
         gl();
-        expression();
+        Node expressionNode = expression();
+        conditionalloopNode.addChild(expressionNode);
         if(currentToken.equals("(1,15)")) {//do
-            operator();
+            Node operatorNode = operator();
+            conditionalloopNode.addChild(operatorNode);
         }else {
             System.err.println("Ожидалось do" + tokens.get(currentIndex).toString());
             System.exit(1);
         }
+        return conditionalloopNode;
     }
-    public void outputOperator(){//вывод
+    public Node outputOperator(){//вывод
+        Node outNode  =  new Node("outputOperator");
         gl();
         if(currentToken.equals("(2,19)")){//(
             gl();
-            expression();
+            Node exressionNode  = expression();
+            outNode.addChild(exressionNode);
             if (currentToken.equals("(2,15)")){
                 while (currentToken.equals("(2,15)")){
                     gl();
-                    expression();
+                    exressionNode  = expression();
+                    outNode.addChild(exressionNode);
                     if (currentToken.equals("(1,1)")) {
                         System.err.println("Конец программы");
                         System.exit(1);
@@ -284,17 +330,20 @@ public class ParserTree {
         }else {
             gl();
         }
-
+        return outNode;
     }
-    public void inputOperator(){
+    public Node inputOperator(){
+        Node inputNode = new Node("inputOperator");
         gl();
         if(currentToken.equals("(2,19)")){//(
             gl();
-            identificator();
+            Node identificatorNode = identificator();
+            inputNode.addChild(inputNode);
             gl();
             if (currentToken.equals("(2,15)")){//,
                 while (currentToken.equals("(2,15)")){
-                    identificator();
+                    identificatorNode = identificator();
+                    inputNode.addChild(inputNode);
                     if (currentToken.equals("(1,1)")) {
                         System.err.println("Конец программы");
                         System.exit(1);
@@ -312,51 +361,72 @@ public class ParserTree {
         }else {
             gl();
         }
+        return inputNode;
     }
-    public void expression(){
-        operand();
+    public Node expression(){
+        Node expressionNode = new Node("Expression");
+        Node operandNode = operand();
+        expressionNode.addChild(operandNode);
         if (isRelationOperator(tokens.get(currentIndex))) {
             while (isRelationOperator(tokens.get(currentIndex))) {
                 gl();
-                operand();
+                operandNode = operand();
+                expressionNode.addChild(operandNode);
             }
         }
+        return operandNode;
     }
-    public void operand(){
-        term();
+    public Node operand(){
+        Node operandNode = new Node("Operand");
+        Node termNode = term();
+        operandNode.addChild(termNode);
         if(isAdditionOperator(tokens.get(currentIndex))) {
             while (isAdditionOperator(tokens.get(currentIndex))) {
                 gl();
-                term();
+                termNode = term();
+                operandNode.addChild(termNode);
             }
         }
+        return operandNode;
     }
-    public void term(){
-        factor();
+    public Node term(){
+        Node termNode = new Node("term");
+        Node factorNode = factor();
+        termNode.addChild(factorNode);
         if(isMultiplicationOperator(tokens.get(currentIndex))) {
             while (isMultiplicationOperator(tokens.get(currentIndex))) {
                 gl();
-                factor();
+                factorNode = factor();
+                termNode.addChild(factorNode);
             }
         }
+        return termNode;
     }
-    public void factor() {
+    public Node factor() {
+        //<множитель>::= <идентификатор> | <число> | <логическая_константа> | <унарная_операция> <множитель> | « (»<выражение>«)»
+        Node factorNode = new Node("Factor");
         if (tokens.get(currentIndex).getTableid().equals("4")) { // Идентификатор
-            System.out.println("Множитель: идентификатор " + tokens.get(currentIndex));
+            Node identificatorNode = identificator();
+            factorNode.addChild(identificatorNode);
             gl();
         } else if (tokens.get(currentIndex).getTableid().equals("3")) { // Число
-            System.out.println("Множитель: число " + tokens.get(currentIndex));
+            if (TN.containsKey(tokens.get(currentIndex).getValue())){
+
+            }
             gl();
-        } else if (tokens.get(currentIndex).toString().equals("(1,15)")) { // Логическая константа
-            System.out.println("Множитель: логическая константа " + tokens.get(currentIndex));
+        } else if (currentToken.equals("(1,17)")||currentToken.equals("(1,18)")){ // Логическая константа
+            Node booleanNode = new Node("boolean");
+            booleanNode.setValue(currentToken);
+            factorNode.addChild(booleanNode);
             gl();
         } else if (tokens.get(currentIndex).toString().equals("(2,14)")) { // ^
             System.out.println("Унарная операция: ^");
+            factorNode.setValue(currentToken);
             gl();
-            factor(); // Рекурсивный вызов для обработки множителя
+            factorNode.addChild(factor());// Рекурсивный вызов для обработки множителя
         } else if (tokens.get(currentIndex).toString().equals("(2,19)")) { // (
             gl(); // Пропускаем скобку
-            expression(); // Рекурсивный вызов для выражения
+            factorNode.addChild(expression());// Рекурсивный вызов для выражения
             if (tokens.get(currentIndex).toString().equals("(2,20)")) { // )
                 gl(); // Пропускаем закрывающую скобку
             } else {
@@ -367,6 +437,7 @@ public class ParserTree {
             System.err.println("Ошибка: неизвестный множитель " + tokens.get(currentIndex));
             System.exit(1);
         }
+        return null;
     }
 
 
