@@ -240,15 +240,17 @@ public class ParserTree {
         Node operatorNode = operator();// Обработка первого оператора
         if((currentToken.equals("(2,16)") || // ":" (код 16)
                 currentToken.equals("(2,13)"))) { // перевод строки (код 13))
+            compoundOperatorNode = new Node("compoundOperator");
+            compoundOperatorNode.addChild(operatorNode);
             while (currentToken.equals("(2,16)") || // ":" (код 16)
                     currentToken.equals("(2,13)")) { // перевод строки (код 13)
-                compoundOperatorNode = new Node("compoundOperator");
-                compoundOperatorNode.addChild(operatorNode);
                 operatorNode = operator(); // Обрабатываем следующий оператор
+                compoundOperatorNode.addChild(operatorNode);
             }
             return compoundOperatorNode;
+        }else {
+            return operatorNode;
         }
-        return operatorNode;
     }
     public Node conditionalOperator(){//условный
         //<условный>::= if <выражение> then <оператор> [ else <оператор>]
@@ -368,7 +370,7 @@ public class ParserTree {
         expressionNode.addChild(operandNode);
         if (isRelationOperator(tokens.get(currentIndex))) {
             while (isRelationOperator(tokens.get(currentIndex))) {
-                expressionNode.setValue(currentToken);
+                expressionNode.setValue(tokens.get(currentIndex).toString());
                 gl();
                 operandNode = operand();
                 expressionNode.addChild(operandNode);
@@ -382,7 +384,7 @@ public class ParserTree {
         operandNode.addChild(termNode);
         if(isAdditionOperator(tokens.get(currentIndex))) {
             while (isAdditionOperator(tokens.get(currentIndex))) {
-                operandNode.setValue(currentToken);
+                operandNode.setValue(tokens.get(currentIndex).toString());
                 gl();
                 termNode = term();
                 operandNode.addChild(termNode);
@@ -396,7 +398,7 @@ public class ParserTree {
         termNode.addChild(factorNode);
         if(isMultiplicationOperator(tokens.get(currentIndex))) {
             while (isMultiplicationOperator(tokens.get(currentIndex))) {
-                termNode.setValue(currentToken);
+                termNode.setValue(tokens.get(currentIndex).toString());
                 gl();
                 factorNode = factor();
                 termNode.addChild(factorNode);
@@ -463,7 +465,6 @@ public class ParserTree {
     public void saveAstToFile(Node rootNode, String filePath) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             writer.write(rootNode.getTreeAsString(0));
-            System.out.println("AST успешно сохранено в файл: " + filePath);
         } catch (IOException e) {
             System.err.println("Ошибка при сохранении AST в файл: " + e.getMessage());
         }

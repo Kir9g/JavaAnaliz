@@ -22,7 +22,25 @@ Programm
             Term
               Factor
                 Number: (3,2)
+    operator
+      AssignmentOperator
+        Identifier: (4,3)
+        Expression
+          Operand: (2,7)
+            Term
+              Factor
+                Identifier: (4,1)
+            Term
+              Factor
+                Identifier: (4,2)
   compoundOperator
+    operator
+      outputOperator
+        Expression
+          Operand
+            Term
+              Factor
+                Identifier: (4,3)
     operator
       conditionalOperator
         Expression: (2,3)
@@ -56,6 +74,13 @@ Programm
                 Term
                   Factor
                     Number: (3,4)
+    operator
+      outputOperator
+        Expression
+          Operand
+            Term
+              Factor
+                Identifier: (4,3)
   compoundOperator
     operator
       FixedOperator
@@ -82,6 +107,13 @@ Programm
                 Term
                   Factor
                     Identifier: (4,4)
+    operator
+      outputOperator
+        Expression
+          Operand
+            Term
+              Factor
+                Identifier: (4,3)
   operator
     Conditionalloop
       Expression: (2,5)

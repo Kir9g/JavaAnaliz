@@ -15,6 +15,9 @@ public class Main {
             Instant end = Instant.now();
             Duration duration = Duration.between(start, end);
             System.out.println("Время выполнения: " + duration.toMillis() + " миллисекунд");
+
+            System.out.println("TN:"+Lexer.TN);
+            System.out.println("TN:"+Lexer.TI);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
