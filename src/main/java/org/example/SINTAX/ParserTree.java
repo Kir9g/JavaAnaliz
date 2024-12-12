@@ -37,10 +37,12 @@ public class ParserTree {
         }
     }
 
-    public void Node() throws IOException {
+    public Node parse() throws IOException {
         tokens = gc(fileInputStream);
         currentIndex = 0;
-        Programm();  // Вызываем процедуру программы
+        Node programmNode = Programm();//Вызываем процедуру программы
+
+        return programmNode;
     }
 
     public static List<Token> gc(FileInputStream filePath) {
@@ -90,10 +92,10 @@ public class ParserTree {
         Node programmNode = new Node("Programm");
         if (tokens.get(currentIndex).toString().equals("(1,2)")) { // begin
             gl(); // Переход к следующему токену
-            programmNode.addChild(new Node("begin"));
             if (tokens.get(currentIndex).toString().equals("(1,3)")) { // var
                 gl();
                 Node description = description();
+                programmNode.addChild(description);
                 gl();
             } else {
                 System.out.println("Нету токена var"+tokens.get(currentIndex).toString());
@@ -110,7 +112,6 @@ public class ParserTree {
             }
             if (tokens.get(currentIndex).toString().equals("(1,1)")){
                 System.out.println("Закончено");
-                programmNode.addChild(new Node("end"));
             }else {
                 System.err.println("Нету end");
                 System.exit(1);
@@ -212,8 +213,7 @@ public class ParserTree {
         //<фиксированного_цикла>::= for <присваивания> to <выражение> do
         //<оператор>
         gl();
-        Node fixedOperatorNode = new Node("fixdOperator");
-        System.out.println("Фиксированный");
+        Node fixedOperatorNode = new Node("FixedOperator");
         Node assignmentOperatorNode = assignmentOperator();
         fixedOperatorNode.addChild(assignmentOperatorNode);
         if (currentToken.equals("(1,16)")){//to
@@ -271,13 +271,12 @@ public class ParserTree {
     }
     public Node assignmentOperator(){//оператора присваивания
         //<присваивания>::= <идентификатор> as <выражение>
-        Node assignmentOperatorNode = new Node("assignmentOperator");
+        Node assignmentOperatorNode = new Node("AssignmentOperator");
         Node identificatorNode = identificator();
         assignmentOperatorNode.addChild(identificatorNode);
         gl();
         if(currentToken.equals("(2,17)")){//as
             gl();
-            System.out.println("as "+currentToken.toString());
             Node expressionNode = expression();
             assignmentOperatorNode.addChild(expressionNode);
         }else {
@@ -287,7 +286,7 @@ public class ParserTree {
         return assignmentOperatorNode;
     }
     public Node conditionalloop(){
-        Node conditionalloopNode = new Node("conditionalloop");
+        Node conditionalloopNode = new Node("Conditionalloop");
         gl();
         Node expressionNode = expression();
         conditionalloopNode.addChild(expressionNode);
@@ -337,13 +336,13 @@ public class ParserTree {
         gl();
         if(currentToken.equals("(2,19)")){//(
             gl();
-            Node identificatorNode = identificator();
-            inputNode.addChild(inputNode);
+            Node expressionNode = expression();
+            inputNode.addChild(expressionNode);
             gl();
             if (currentToken.equals("(2,15)")){//,
                 while (currentToken.equals("(2,15)")){
-                    identificatorNode = identificator();
-                    inputNode.addChild(inputNode);
+                    expressionNode = expression();
+                    inputNode.addChild(expressionNode);
                     if (currentToken.equals("(1,1)")) {
                         System.err.println("Конец программы");
                         System.exit(1);
@@ -369,12 +368,13 @@ public class ParserTree {
         expressionNode.addChild(operandNode);
         if (isRelationOperator(tokens.get(currentIndex))) {
             while (isRelationOperator(tokens.get(currentIndex))) {
+                expressionNode.setValue(currentToken);
                 gl();
                 operandNode = operand();
                 expressionNode.addChild(operandNode);
             }
         }
-        return operandNode;
+        return expressionNode;
     }
     public Node operand(){
         Node operandNode = new Node("Operand");
@@ -382,6 +382,7 @@ public class ParserTree {
         operandNode.addChild(termNode);
         if(isAdditionOperator(tokens.get(currentIndex))) {
             while (isAdditionOperator(tokens.get(currentIndex))) {
+                operandNode.setValue(currentToken);
                 gl();
                 termNode = term();
                 operandNode.addChild(termNode);
@@ -390,11 +391,12 @@ public class ParserTree {
         return operandNode;
     }
     public Node term(){
-        Node termNode = new Node("term");
+        Node termNode = new Node("Term");
         Node factorNode = factor();
         termNode.addChild(factorNode);
         if(isMultiplicationOperator(tokens.get(currentIndex))) {
             while (isMultiplicationOperator(tokens.get(currentIndex))) {
+                termNode.setValue(currentToken);
                 gl();
                 factorNode = factor();
                 termNode.addChild(factorNode);
@@ -410,9 +412,8 @@ public class ParserTree {
             factorNode.addChild(identificatorNode);
             gl();
         } else if (tokens.get(currentIndex).getTableid().equals("3")) { // Число
-            if (TN.containsKey(tokens.get(currentIndex).getValue())){
-
-            }
+            Node NumberNode = new Node("Number",currentToken);
+            factorNode.addChild(NumberNode);
             gl();
         } else if (currentToken.equals("(1,17)")||currentToken.equals("(1,18)")){ // Логическая константа
             Node booleanNode = new Node("boolean");
@@ -437,7 +438,7 @@ public class ParserTree {
             System.err.println("Ошибка: неизвестный множитель " + tokens.get(currentIndex));
             System.exit(1);
         }
-        return null;
+        return factorNode;
     }
 
 
@@ -458,6 +459,14 @@ public class ParserTree {
         return token.toString().equals("(2,10)") || // umn
                 token.toString().equals("(2,11)") || // del
                 token.toString().equals("(2,12)");   // &&
+    }
+    public void saveAstToFile(Node rootNode, String filePath) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+            writer.write(rootNode.getTreeAsString(0));
+            System.out.println("AST успешно сохранено в файл: " + filePath);
+        } catch (IOException e) {
+            System.err.println("Ошибка при сохранении AST в файл: " + e.getMessage());
+        }
     }
 
 

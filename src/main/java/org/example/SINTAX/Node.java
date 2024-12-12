@@ -52,7 +52,7 @@ public class Node {
     }
 
     public void printTree(int indent) {
-        String prefix = "   ".repeat(indent);
+        String prefix = " ".repeat(indent);
         if (value != null) {
             System.out.println(prefix + nodeType + ": " + value);
         } else {
@@ -66,7 +66,7 @@ public class Node {
 
     public String getTreeAsString(int indent) {
         StringBuilder result = new StringBuilder();
-        String prefix = "   ".repeat(indent);
+        String prefix = " ".repeat(indent);
         if (value != null) {
             result.append(prefix).append(nodeType).append(": ").append(value).append("\n");
         } else {
@@ -78,8 +78,4 @@ public class Node {
         return result.toString();
     }
 
-    public String toJson(){
-        Gson gson = new Gson();
-        return gson.toJson(this);
-    }
 }

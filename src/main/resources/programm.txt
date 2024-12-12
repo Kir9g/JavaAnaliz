@@ -4,4 +4,4 @@ begin /*
  */;y as 790: result as x add y; write (result)
   if x LOWT y then result as x add 5 else result as y add 0.1E2
    write (result); for i as 1 to 3 do result as result add i
-    write (result); while result GRT 0 do result as result disa 1; write (result) end
+    write (result); while result GRT 2 do result as result disa 1; write (result) end
