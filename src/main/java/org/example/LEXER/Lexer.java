@@ -39,6 +39,7 @@ public class Lexer {
         LexerUtilis.start();
     }
     static boolean canread = true;
+    public static HashMap<Integer,String> variable_types = new HashMap<>();
 
     public static void run() throws IOException {
         gc();
@@ -281,6 +282,7 @@ public class Lexer {
                             state = H;
                         }else {
                             put(TN);
+                            variable_types.put(z,"int");
                             out(3, z);
                             state = H;
                         }
@@ -292,6 +294,7 @@ public class Lexer {
                             state = H;
                         }else {
                             put(TN);
+                            variable_types.put(z,"int");
                             out(3, z);
                             state = H;
                         }
@@ -332,6 +335,7 @@ public class Lexer {
                     else if(CH=='\t' || CH== ' '){
                         gc();
                         put(TN);
+                        variable_types.put(z,"int");
                         out(3,z);
                         state = H;
                     }
@@ -342,6 +346,7 @@ public class Lexer {
                             state = H;
                         }else {
                             put(TN);
+                            variable_types.put(z,"int");;
                             out(3, z);
                             state = H;
                         }
@@ -365,6 +370,7 @@ public class Lexer {
                     else if(CH=='\t' || CH== ' '){
                         gc();
                         put(TN);
+                        variable_types.put(z,"int");
                         out(3,z);
                         state = H;
                     }
@@ -375,6 +381,7 @@ public class Lexer {
                             state = H;
                         }else {
                             put(TN);
+                            variable_types.put(z,"int");
                             out(3, z);
                             state = H;
                         }
@@ -391,6 +398,7 @@ public class Lexer {
                             state = H;
                         }else {
                             put(TN);
+                            variable_types.put(z,"int");
                             out(3, z);
                             state = H;
                         }
@@ -403,6 +411,7 @@ public class Lexer {
                             state = H;
                         }else {
                             put(TN);
+                            variable_types.put(z,"int");
                             out(3, z);
                             state = H;
                         }
@@ -431,6 +440,7 @@ public class Lexer {
                             state = H;
                         }else {
                             put(TN);
+                            variable_types.put(z,"float");
                             out(3,z);
                             state = H;
                         }
@@ -442,6 +452,7 @@ public class Lexer {
                             state = H;
                         }else {
                             put(TN);
+                            variable_types.put(z,"float");
                             out(3, z);
                             state = H;
                         }
@@ -462,6 +473,7 @@ public class Lexer {
                         if(CH == ' '|| CH=='\t'){
                             gc();
                             put(TN);
+                            variable_types.put(z,"float");
                             out(3,z);
                             state = H;
                         }else if(TlCheck()){
@@ -471,6 +483,7 @@ public class Lexer {
                                 state = H;
                             }else {
                                 put(TN);
+                                variable_types.put(z,"float");
                                 out(3,z);
                                 state = H;
                             }
@@ -490,6 +503,7 @@ public class Lexer {
                                 state = H;
                             }else {
                                 put(TN);
+                                variable_types.put(z,"float");
                                 out(3, z);
                                 state = H;
                             }
@@ -500,6 +514,7 @@ public class Lexer {
                                 state = H;
                             }else {
                                 put(TN);
+                                variable_types.put(z,"float");
                                 out(3, z);
                                 state = H;
                             }
@@ -528,6 +543,7 @@ public class Lexer {
                                 state = H;
                             }else {
                                 put(TN);
+                                variable_types.put(z,"float");
                                 out(3,z);
                                 state = H;
                             }
@@ -538,6 +554,7 @@ public class Lexer {
                                 state = H;
                             }else {
                                 put(TN);
+                                variable_types.put(z,"float");
                                 out(3, z);
                                 state = H;
                             }
@@ -568,6 +585,7 @@ public class Lexer {
                                 state = H;
                             }else {
                                 put(TN);
+                                variable_types.put(z,"float");
                                 out(3,z);
                                 state = H;
                             }
@@ -578,6 +596,7 @@ public class Lexer {
                                 state = H;
                             }else {
                                 put(TN);
+                                variable_types.put(z,"float");
                                 out(3, z);
                                 state = H;
                             }
@@ -720,6 +739,8 @@ public class Lexer {
             z = table.get(S);
         }
     }
+
+
     public static String findKeyByValue(HashMap<String, Integer> map, int value) {
         for (Map.Entry<String, Integer> entry : map.entrySet()) {
             if (entry.getValue() == value) {

@@ -3,6 +3,7 @@ Programm
     Identifier: (4,1)
     Identifier: (4,2)
     Identifier: (4,3)
+    Identifier: (4,4)
     Type
       int
   operator
@@ -24,7 +25,7 @@ Programm
                 Number: (3,2)
     operator
       AssignmentOperator
-        Identifier: (4,3)
+        Identifier: (4,4)
         Expression
           Operand: (2,7)
             Term
@@ -40,7 +41,7 @@ Programm
           Operand
             Term
               Factor
-                Identifier: (4,3)
+                Identifier: (4,4)
     operator
       conditionalOperator
         Expression: (2,3)
@@ -54,7 +55,7 @@ Programm
                 Identifier: (4,2)
         operator
           AssignmentOperator
-            Identifier: (4,3)
+            Identifier: (4,4)
             Expression
               Operand: (2,7)
                 Term
@@ -65,7 +66,7 @@ Programm
                     Number: (3,3)
         operator
           AssignmentOperator
-            Identifier: (4,3)
+            Identifier: (4,4)
             Expression
               Operand: (2,7)
                 Term
@@ -80,59 +81,63 @@ Programm
           Operand
             Term
               Factor
-                Identifier: (4,3)
+                Identifier: (4,4)
   compoundOperator
     operator
       FixedOperator
         AssignmentOperator
-          Identifier: (4,4)
+          Identifier: (4,3)
           Expression
             Operand
               Term
                 Factor
                   Number: (3,5)
-        Expression
+        Expression: (2,4)
+          Operand
+            Term
+              Factor
+                Identifier: (4,3)
           Operand
             Term
               Factor
                 Number: (3,6)
         operator
           AssignmentOperator
-            Identifier: (4,3)
+            Identifier: (4,4)
             Expression
               Operand: (2,7)
                 Term
                   Factor
-                    Identifier: (4,3)
+                    Identifier: (4,4)
                 Term
                   Factor
-                    Identifier: (4,4)
+                    Identifier: (4,3)
     operator
       outputOperator
         Expression
           Operand
             Term
               Factor
-                Identifier: (4,3)
+                Identifier: (4,4)
   operator
     Conditionalloop
       Expression: (2,5)
         Operand
           Term
             Factor
-              Identifier: (4,3)
+              Identifier: (4,4)
         Operand
           Term
             Factor
               Number: (3,7)
       operator
         AssignmentOperator
-          Identifier: (4,3)
+          Identifier: (4,4)
           Expression
             Operand: (2,8)
               Term
                 Factor
-                  Identifier: (4,3)
+                  Identifier: (4,4)
               Term
                 Factor
                   Number: (3,5)
@@ -142,4 +147,4 @@ Programm
         Operand
           Term
             Factor
-              Identifier: (4,3)
+              Identifier: (4,4)

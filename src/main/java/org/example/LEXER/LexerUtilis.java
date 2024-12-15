@@ -25,12 +25,12 @@ public class LexerUtilis {
         TW.put("false",18);
     }
     public static void loadTL(){
-        TL.put("NEQ", 1);
-        TL.put("EQV", 2);
-        TL.put("LOWT", 3);
-        TL.put("LOWE", 4);
-        TL.put("GRT", 5);
-        TL.put("GRE", 6);
+        TL.put("NEQ", 1);//!=
+        TL.put("EQV", 2);//==
+        TL.put("LOWT", 3);//<
+        TL.put("LOWE", 4);//<=
+        TL.put("GRT", 5);//>
+        TL.put("GRE", 6);//>=
         TL.put("add", 7);
         TL.put("disa", 8);
         TL.put("||", 9);

@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Syntax {
-    public static void run() throws IOException {
+    public static Node run() throws IOException {
         Instant start = Instant.now();
         ParserTree parserTree = new ParserTree("src/main/resources/lexem.txt");
         Node parentNode = parserTree.parse();
@@ -27,5 +27,6 @@ public class Syntax {
         parentNode.printTree(0);
 
         System.out.println("Синтаксис выполнен за "+duration.toMillis() +" милисекунд");
+        return parentNode;
     }
 }

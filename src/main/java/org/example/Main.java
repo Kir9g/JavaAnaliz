@@ -1,11 +1,18 @@
 package org.example;
 
 import org.example.LEXER.Lexer;
+import org.example.SEMAMTIC.Semantic;
+import org.example.SINTAX.Node;
 import org.example.SINTAX.Syntax;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import static org.example.LEXER.Lexer.variable_types;
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -15,12 +22,13 @@ public class Main {
             Instant end = Instant.now();
             Duration duration = Duration.between(start, end);
             System.out.println("Время выполнения: " + duration.toMillis() + " миллисекунд");
-
-            System.out.println("TN:"+Lexer.TN);
-            System.out.println("TN:"+Lexer.TI);
+            System.out.println("TN:"+Lexer.TN + "\n");
+            System.out.println("TI:"+Lexer.TI + "\n");
+            System.out.println("types"+Lexer.variable_types +"\n");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        Syntax.run();
+        Node parsertree = Syntax.run();
+        Semantic.run(parsertree, variable_types);
     }
 }
