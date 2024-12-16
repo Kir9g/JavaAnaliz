@@ -31,9 +31,10 @@ Programm
             Term
               Factor
                 Identifier: (4,1)
-            Term
-              Factor
-                Identifier: (4,2)
+            AdditionOperator: (2,7)
+              Term
+                Factor
+                  Identifier: (4,2)
   compoundOperator
     operator
       outputOperator
@@ -49,10 +50,16 @@ Programm
             Term
               Factor
                 Identifier: (4,1)
-          Operand
-            Term
-              Factor
-                Identifier: (4,2)
+          RelationOperator: (2,3)
+            Operand
+              Term
+                Factor
+                  Identifier: (4,2)
+          RelationOperator: (2,3)
+            Operand
+              Term
+                Factor
+                  Identifier: (4,4)
         operator
           AssignmentOperator
             Identifier: (4,4)
@@ -61,9 +68,14 @@ Programm
                 Term
                   Factor
                     Identifier: (4,1)
-                Term
-                  Factor
-                    Number: (3,3)
+                AdditionOperator: (2,7)
+                  Term
+                    Factor
+                      Number: (3,3)
+                AdditionOperator: (2,8)
+                  Term
+                    Factor
+                      Number: (3,3)
         operator
           AssignmentOperator
             Identifier: (4,4)
@@ -72,9 +84,10 @@ Programm
                 Term
                   Factor
                     Identifier: (4,2)
-                Term
-                  Factor
-                    Number: (3,4)
+                AdditionOperator: (2,7)
+                  Term
+                    Factor
+                      Number: (3,4)
     operator
       outputOperator
         Expression
@@ -101,13 +114,13 @@ Programm
           AssignmentOperator
             Identifier: (4,4)
             Expression
-              Operand: (2,7)
-                Term
+              Operand
+                Term: (2,10)
                   Factor
                     Identifier: (4,4)
-                Term
-                  Factor
-                    Identifier: (4,3)
+                  MultiplicationOperator: (2,10)
+                    Factor
+                      Identifier: (4,3)
     operator
       outputOperator
         Expression
@@ -122,10 +135,11 @@ Programm
           Term
             Factor
               Identifier: (4,4)
-        Operand
-          Term
-            Factor
-              Number: (3,7)
+        RelationOperator: (2,5)
+          Operand
+            Term
+              Factor
+                Number: (3,7)
       operator
         AssignmentOperator
           Identifier: (4,4)
@@ -134,9 +148,10 @@ Programm
               Term
                 Factor
                   Identifier: (4,4)
-              Term
-                Factor
-                  Number: (3,5)
+              AdditionOperator: (2,8)
+                Term
+                  Factor
+                    Number: (3,5)
   operator
     outputOperator
       Expression

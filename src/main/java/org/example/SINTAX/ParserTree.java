@@ -317,13 +317,13 @@ public class ParserTree {
         gl();
         if(currentToken.equals("(2,19)")){//(
             gl();
-            Node exressionNode  = expression();
-            outNode.addChild(exressionNode);
+            Node expressionNode  = expression();
+            outNode.addChild(expressionNode);
             if (currentToken.equals("(2,15)")){
                 while (currentToken.equals("(2,15)")){
                     gl();
-                    exressionNode  = expression();
-                    outNode.addChild(exressionNode);
+                    expressionNode  = expression();
+                    outNode.addChild(expressionNode);
                     if (currentToken.equals("(1,1)")) {
                         System.err.println("Конец программы");
                         System.exit(1);
@@ -376,43 +376,52 @@ public class ParserTree {
         return inputNode;
     }
     public Node expression(){
+        //выражение
         Node expressionNode = new Node("Expression");
         Node operandNode = operand();
         expressionNode.addChild(operandNode);
         if (isRelationOperator(tokens.get(currentIndex))) {
+            expressionNode.setValue(tokens.get(currentIndex).toString());
             while (isRelationOperator(tokens.get(currentIndex))) {
-                expressionNode.setValue(tokens.get(currentIndex).toString());
+                Node RelationOperator = new Node("RelationOperator",currentToken);
                 gl();
-                operandNode = operand();
-                expressionNode.addChild(operandNode);
+                Node Operandd = operand();
+                RelationOperator.addChild(Operandd);
+                expressionNode.addChild(RelationOperator);
             }
         }
         return expressionNode;
     }
     public Node operand(){
+        //операнд
         Node operandNode = new Node("Operand");
         Node termNode = term();
-        operandNode.addChild(termNode);
+        operandNode.addChild(termNode);//left
         if(isAdditionOperator(tokens.get(currentIndex))) {
+            operandNode.setValue(currentToken);
             while (isAdditionOperator(tokens.get(currentIndex))) {
-                operandNode.setValue(tokens.get(currentIndex).toString());
+                Node AdditionOperator = new Node("AdditionOperator",currentToken);
                 gl();
                 termNode = term();
-                operandNode.addChild(termNode);
+                AdditionOperator.addChild(termNode);
+                operandNode.addChild(AdditionOperator);
             }
         }
         return operandNode;
     }
     public Node term(){
+        //слагаемое
         Node termNode = new Node("Term");
         Node factorNode = factor();
-        termNode.addChild(factorNode);
+        termNode.addChild(factorNode);//первое слагаемое
         if(isMultiplicationOperator(tokens.get(currentIndex))) {
+            termNode.setValue(currentToken);
             while (isMultiplicationOperator(tokens.get(currentIndex))) {
-                termNode.setValue(tokens.get(currentIndex).toString());
+                Node MultiplicationOperator = new Node("MultiplicationOperator", currentToken);
                 gl();
                 factorNode = factor();
-                termNode.addChild(factorNode);
+                MultiplicationOperator.addChild(factorNode);
+                termNode.addChild(MultiplicationOperator);
             }
         }
         return termNode;

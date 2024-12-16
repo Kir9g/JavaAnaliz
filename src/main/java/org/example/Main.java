@@ -12,8 +12,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static org.example.LEXER.Lexer.lexemes;
-import static org.example.LEXER.Lexer.variable_types;
+import static org.example.LEXER.Lexer.*;
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -24,6 +23,7 @@ public class Main {
             Duration duration = Duration.between(start, end);
             System.out.printf("Семантика выполнена за %.3f миллисекунд%n", duration.toNanos() / 1_000_000.0);
             System.out.println("TN:"+Lexer.TN + "\n");
+            System.out.println("Числа в бинарном представленнии");
             System.out.println("TI:"+Lexer.TI + "\n");
             System.out.println("types"+Lexer.variable_types +"\n");
         } catch (IOException e) {

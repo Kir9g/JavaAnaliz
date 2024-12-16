@@ -35,6 +35,7 @@ public class Lexer {
     public static HashMap<String,Integer> TL = new HashMap<>();//2
     public static HashMap<String,Integer> TI = new HashMap<>();//4
     public static HashMap<String,Integer> TN = new HashMap<>();//3
+
     static {
         LexerUtilis.start();
     }
@@ -283,6 +284,7 @@ public class Lexer {
                         }else {
                             put(TN);
                             variable_types.put(z,"int");
+
                             out(3, z);
                             state = H;
                         }
@@ -436,6 +438,9 @@ public class Lexer {
                         look(TN);
                         if(z!=0){
                             put(TN);
+
+
+
                             out(3,z);
                             state = H;
                         }else {
@@ -798,4 +803,5 @@ public class Lexer {
             System.out.println("out: "+ t + ","+ v +"):" + "key is not found");
         }
     }
+
 }

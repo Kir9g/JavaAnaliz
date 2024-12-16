@@ -1,6 +1,7 @@
 package org.example.SEMAMTIC;
 
 import org.example.SINTAX.Node;
+import org.example.Token;
 
 import java.util.*;
 
@@ -84,9 +85,11 @@ public class SemanticAnalyzer {
     }
 
     private void handleConditionalOperator(Node node) {
-        String Exression = evaluate_expression(node.getChildren().get(0));
-        if (Exression!= "bool"){
-            throw new IllegalStateException("Выражение не bool, a "+Exression);
+
+        String Expression = evaluate_expression(node.getChildren().get(0));
+
+        if (Expression!= "bool"){
+            throw new IllegalStateException("Выражение не bool, a "+Expression);
         }
         for(int i = 1;i<node.getChildren().size();i++){
             visit(node.getChildren().get(i));
@@ -122,6 +125,7 @@ public class SemanticAnalyzer {
         }
         Node identifierNode = children.get(0);
         Node expressionNode = children.get(1);
+
 
         if (!declaration_identifier.contains(identifierNode.getValue())){
             throw new IllegalStateException("Идентификатор не был объявлен "+identifierNode.getValue());
@@ -167,45 +171,50 @@ public class SemanticAnalyzer {
         return type;
     }
     private String evaluate_expression(Node node){
-        if (node.getNodeType().equals("Expression")){
-            //isRelationOperator
-            if (node.getValue()==null){
-                return evaluate_expression(node.getChildren().get(0));
-            }else {
-                return evaluate_operation(node);
-            }
+        if (node.getNodeType().equals("Expression")&&node.getValue()==null
+                ||node.getNodeType().equals("Operand")&&node.getValue()==null
+                ||node.getNodeType().equals("Term")&&node.getValue()==null
+                ||node.getNodeType().equals("Factor")&&node.getValue()==null){
 
-        }else if (node.getNodeType().equals("Operand")){
-            //MultiplicativeOperation
-            if (node.getValue()==null){
-                return evaluate_expression(node.getChildren().get(0));
-            }else {
-                return evaluate_operation(node);
-            }
-        }else if(node.getNodeType().equals("Term")){
-            if (node.getValue()==null){
-                return evaluate_expression(node.getChildren().get(0));
-            }else {
-                return evaluate_operation(node);
-            }
-        }else if (node.getNodeType().equals("Factor")){
             return evaluate_expression(node.getChildren().get(0));
-        } else {
+
+        }else if(node.getNodeType().equals("Expression")&&node.getValue()!=null
+                ||node.getNodeType().equals("Operand")&&node.getValue()!=null
+                ||node.getNodeType().equals("Term")&&node.getValue()!=null
+                ||node.getNodeType().equals("Factor")&&node.getValue()!=null){
+
+            return evaluate_operation(node);
+        }
+        else if (node.getNodeType().equals("AdditionOperator")
+                ||node.getNodeType().equals("RelationOperator")
+                ||node.getNodeType().equals("MultiplicationOperator")){
+
+            return evaluate_operation(node);
+        }
+        else {
             return getType(node);
         }
     }
     private String evaluate_operation(Node node){
-        String OperandType = evaluate_expression(node.getChildren().get(0));
+        String OperandType;
+        if (!isRelationOperator(node)) {
+           OperandType = evaluate_expression(node.getChildren().get(0));
+        }else {
+            OperandType = "bool";
+        }
         for (int i = 1;i<node.getChildren().size();i++){
             String childType = evaluate_expression(node.getChildren().get(i));
-            if (node.getNodeType().equals("Operand") &&node.getValue().equals("(2,11")){
+            if (node.getNodeType().equals("MultiplicationOperator")&&node.getValue().equals("(2,11")||
+                    node.getNodeType().equals("Operand") &&node.getValue().equals("(2,11")){
                 return "float";
             }
             if (childType!=OperandType){
                 throw new IllegalStateException("Несоответствие типов в операции "+ node.getNodeType() +": "+OperandType+" и "+ childType+"");
             }
         }
-        return node.getNodeType().equals("Expression")&& node.getValue()!=null ? "bool" : OperandType;
+        return node.getNodeType().equals("RelationOperator")
+                ||(node.getNodeType().equals("Expression")&& node.getValue()!=null)
+                ? "bool" : OperandType;
     }
 
     private String getType(Node node){
@@ -229,6 +238,14 @@ public class SemanticAnalyzer {
             return variableType;
         }
         return null;
+    }
+    private boolean isRelationOperator(Node node) {
+        return node.getValue().equals("(2,1)") || // NEQ
+                node.getValue().equals("(2,2)") || // EQV
+                node.getValue().equals("(2,3)") || // LOWT
+                node.getValue().equals("(2,4)") || // LOWE
+                node.getValue().equals("(2,5)") || // GRT
+                node.getValue().equals("(2,6)");   // GRE
     }
 
 }
