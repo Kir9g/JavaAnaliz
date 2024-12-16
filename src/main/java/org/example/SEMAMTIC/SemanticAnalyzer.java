@@ -68,22 +68,19 @@ public class SemanticAnalyzer {
     }
 
     private void handleFixedOperator(Node node) {
+
         List<Node> childrens = node.getChildren();
-        for (int i = 0;i<node.getChildren().size();i++) {
-            if (i==0) {
-                System.out.println("Fixed1");
-                handleAssignment(childrens.get(0));
-            } else if (i==1) {
-                System.out.println("Fixed2");
-                String expression = evaluate_expression(childrens.get(1));
-                if (expression != "bool") {
-                    throw new IllegalStateException("Выражение в фиксированном операторе не bool, а " + expression);
-                }
-            } else if (i==2) {
-                System.out.println("Fixed3");
-                handleOperator(childrens.get(2));
-            }
+
+        String operation = handleAssignment(childrens.get(0));
+
+        String expression = evaluate_expression(childrens.get(1));
+
+        if (operation!=expression){
+            throw new RuntimeException("Несоответствие типов в фиксированном цикле: операции "+operation+", выражения "+expression+"");
         }
+
+        handleOperator(childrens.get(2));
+
     }
 
     private void handleConditionalOperator(Node node) {
@@ -97,25 +94,28 @@ public class SemanticAnalyzer {
     }
 
     private void handleOutputOperator(Node node) {
-        System.out.println("Выводной оператор ");
+
         for (int i=0;i<node.getChildren().size();i++){
            evaluate_expression(node.getChildren().get(i));
         }
     }
 
     private void handleCompoundOperator(Node node) {
+
         for (Node child : node.getChildren()) {
             visit(child);
         }
     }
 
     private void handleOperator(Node node) {
+
         for (Node child : node.getChildren()) {
             visit(child);
         }
     }
     //<присваивания>::= <идентификатор> as <выражение>
-    private void handleAssignment(Node node) {
+    private String handleAssignment(Node node) {
+
         List<Node> children = node.getChildren();
         if (children.size()!=2){
             throw new IllegalStateException("Ошибка синтаксиса: оператор присваивания должен иметь ровно 2 дочерних узла, но найдено: " + children.size());
@@ -128,15 +128,16 @@ public class SemanticAnalyzer {
         }
         String left = checkType(identifierNode);
         String right = evaluate_expression(expressionNode);
-        System.out.println("Левая сторона: " + left);
-        System.out.println("Правая сторона: " + right);
+
         if (left!=right){
             throw new IllegalStateException("Несоответствие типов: слева "+left+", справа "+right+"");
         }
-        System.out.println("Одинковые типы "+left+" и "+right);
+
+        return left;
     }
     //programm
     private void handleProgram(Node node) {
+
         for (Node child : node.getChildren()) {
             visit(child);
         }
@@ -144,6 +145,7 @@ public class SemanticAnalyzer {
 
     //описание
     private void handleDescription(Node node) {
+
         for (Node child : node.getChildren()) {
             if (child.getNodeType().equals("Identifier")){
                 if (!declaration_identifier.contains(child.getValue())) {
@@ -153,7 +155,6 @@ public class SemanticAnalyzer {
                 }
             }else if(child.getNodeType().equals("Type")){
                 type = child.getChildren().get(0).getNodeType();
-                System.out.println("type = "+type);
             }
         }
     }
@@ -161,14 +162,12 @@ public class SemanticAnalyzer {
 
         String value = node.getValue();
         initializedVariables.add(value);
-        System.out.println(initializedVariables);
+
 
         return type;
     }
     private String evaluate_expression(Node node){
-        System.out.println(node.getNodeType());
         if (node.getNodeType().equals("Expression")){
-            System.out.println(node.getNodeType());
             //isRelationOperator
             if (node.getValue()==null){
                 return evaluate_expression(node.getChildren().get(0));
@@ -226,8 +225,7 @@ public class SemanticAnalyzer {
                 throw new IllegalStateException("Тип для переменной с ключом " + key + " не найден.");
             }
 
-            System.out.println(variableType +" variableType");
-            System.out.println(value);
+
             return variableType;
         }
         return null;

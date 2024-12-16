@@ -92,11 +92,7 @@ Programm
               Term
                 Factor
                   Number: (3,5)
-        Expression: (2,4)
-          Operand
-            Term
-              Factor
-                Identifier: (4,3)
+        Expression
           Operand
             Term
               Factor
