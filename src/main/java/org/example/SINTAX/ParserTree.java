@@ -36,43 +36,54 @@ public class ParserTree {
             throw new RuntimeException(e);
         }
     }
+    public ParserTree(List<Token> token) throws IOException {
+        this.tokens = token;
+        this.currentIndex = 0;
+        this.currentToken = null;
+        this.previousToken = null;
+        this.TW = Lexer.TW;
+        this.TI = Lexer.TI;
+        this.TL = Lexer.TL;
+        this.TN = Lexer.TN;
+
+    }
 
     public Node parse() throws IOException {
-        tokens = gc(fileInputStream);
+//        tokens = gc(fileInputStream);
         currentIndex = 0;
         Node programmNode = Programm();//Вызываем процедуру программы
 
         return programmNode;
     }
 
-    public static List<Token> gc(FileInputStream filePath) {
-        List<Token> tokens = new ArrayList<>();
-        Pattern pattern = Pattern.compile("\\((\\d+),(\\d+)\\)"); // Регулярное выражение для поиска пар вида (a,b)
-
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(filePath))) {
-            String line = reader.readLine(); // Считываем строку из потока
-            if (line != null) {
-                Matcher matcher = pattern.matcher(line);
-
-                // Ищем все совпадения в строке
-                while (matcher.find()) {
-                    int first = Integer.parseInt(matcher.group(1)); // Первая группа (a)
-                    int second = Integer.parseInt(matcher.group(2)); // Вторая группа (b)
-                    tokens.add(new Token(first, second));
-                }
-            }
-            filePath.close();
-            System.out.println(tokens);
-        } catch (IOException e) {
-            System.err.println("Ошибка при чтении потока: " + e.getMessage());
-            System.exit(1);
-        } catch (NumberFormatException e) {
-            System.err.println("Ошибка при преобразовании числа: " + e.getMessage());
-            System.exit(1);
-        }
-
-        return tokens;
-    }
+//    public static List<Token> gc(FileInputStream filePath) {
+//        List<Token> tokens = new ArrayList<>();
+//        Pattern pattern = Pattern.compile("\\((\\d+),(\\d+)\\)"); // Регулярное выражение для поиска пар вида (a,b)
+//
+//        try (BufferedReader reader = new BufferedReader(new InputStreamReader(filePath))) {
+//            String line = reader.readLine(); // Считываем строку из потока
+//            if (line != null) {
+//                Matcher matcher = pattern.matcher(line);
+//
+//                // Ищем все совпадения в строке
+//                while (matcher.find()) {
+//                    int first = Integer.parseInt(matcher.group(1)); // Первая группа (a)
+//                    int second = Integer.parseInt(matcher.group(2)); // Вторая группа (b)
+//                    tokens.add(new Token(first, second));
+//                }
+//            }
+//            filePath.close();
+//            System.out.println(tokens);
+//        } catch (IOException e) {
+//            System.err.println("Ошибка при чтении потока: " + e.getMessage());
+//            System.exit(1);
+//        } catch (NumberFormatException e) {
+//            System.err.println("Ошибка при преобразовании числа: " + e.getMessage());
+//            System.exit(1);
+//        }
+//
+//        return tokens;
+//    }
 
     public void gl() {
 

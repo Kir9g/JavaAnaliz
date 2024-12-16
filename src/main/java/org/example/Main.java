@@ -12,6 +12,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static org.example.LEXER.Lexer.lexemes;
 import static org.example.LEXER.Lexer.variable_types;
 
 public class Main {
@@ -21,14 +22,14 @@ public class Main {
             Lexer.run();
             Instant end = Instant.now();
             Duration duration = Duration.between(start, end);
-            System.out.println("Время выполнения: " + duration.toMillis() + " миллисекунд");
+            System.out.printf("Семантика выполнена за %.3f миллисекунд%n", duration.toNanos() / 1_000_000.0);
             System.out.println("TN:"+Lexer.TN + "\n");
             System.out.println("TI:"+Lexer.TI + "\n");
             System.out.println("types"+Lexer.variable_types +"\n");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        Node parsertree = Syntax.run();
+        Node parsertree = Syntax.run(lexemes);
         Semantic.run(parsertree, variable_types);
     }
 }

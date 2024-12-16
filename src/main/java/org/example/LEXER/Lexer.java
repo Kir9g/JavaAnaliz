@@ -29,7 +29,7 @@ public class Lexer {
 
     static char CH;
     static String S = "";
-    static List<Token> lexemes = new ArrayList<>();
+    public static List<Token> lexemes = new ArrayList<>();
     static int z = 0;
     public static HashMap<String,Integer> TW = new HashMap<>();//1
     public static HashMap<String,Integer> TL = new HashMap<>();//2
