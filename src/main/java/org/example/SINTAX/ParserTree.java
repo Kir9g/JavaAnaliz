@@ -48,7 +48,7 @@ public class ParserTree {
 
     }
 
-    public Node parse() throws IOException {
+    public Node parse() throws Exception {
 //        tokens = gc(fileInputStream);
         currentIndex = 0;
         Node programmNode = Programm();//Вызываем процедуру программы
@@ -75,11 +75,9 @@ public class ParserTree {
 //            filePath.close();
 //            System.out.println(tokens);
 //        } catch (IOException e) {
-//            System.err.println("Ошибка при чтении потока: " + e.getMessage());
-//            System.exit(1);
+//            throw new Exception("Ошибка при чтении потока: " + e.getMessage());
 //        } catch (NumberFormatException e) {
-//            System.err.println("Ошибка при преобразовании числа: " + e.getMessage());
-//            System.exit(1);
+//            throw new Exception("Ошибка при преобразовании числа: " + e.getMessage());
 //        }
 //
 //        return tokens;
@@ -93,12 +91,12 @@ public class ParserTree {
             currentToken = tokens.get(currentIndex).toString();
 
         } else {
-            throw new IndexOutOfBoundsException("Достигнут конец списка токенов.");
+            throw new IndexOutOfBoundsException("Синтаксическая ошибка:Достигнут конец списка токенов.");
         }
 
     }
 
-    public Node Programm() {
+    public Node Programm() throws Exception {
         //<программа>::= begin var <описание> {; <оператор>} end
         Node programmNode = new Node("Programm");
         if (tokens.get(currentIndex).toString().equals("(1,2)")) { // begin
@@ -109,31 +107,27 @@ public class ParserTree {
                 programmNode.addChild(description);
                 gl();
             } else {
-                System.out.println("Нету токена var"+tokens.get(currentIndex).toString());
+                throw new Exception("Синтаксическая ошибка: Ожидался токен var"+tokens.get(currentIndex).toString());
             }
             while (!tokens.get(currentIndex).toString().equals("(1,1)")) {
                 if (currentToken.equals("(2,18)")) {
                     Node operatorNode = compoundOperator();
                     programmNode.addChild(operatorNode);
                 }else {
-                    System.err.println("Ожидалось ;, а получили " + currentToken);
-                    System.err.println(previousToken+currentToken);
-                    System.exit(1);
+                    throw new Exception("Синтаксическая ошибка: Ожидалось ;, а получили " + previousToken+currentToken);
                 }
             }
             if (tokens.get(currentIndex).toString().equals("(1,1)")){
                 System.out.println("Закончено");
             }else {
-                System.err.println("Нету end");
-                System.exit(1);
+                throw new Exception("Синтаксическая ошибка: Ожидался токен End");
             }
         } else {
-            System.err.println("Нету токена begin");
-            System.exit(1);
+            throw new Exception("Синтаксическая ошибка: Ожидался токен begin");
         }
         return programmNode;
     }
-    public Node description(){
+    public Node description() throws Exception {
         //<описание>::= dim <идентификатор> {, <идентификатор> } <тип>
         Node descriptionNode = new Node("Description");
         if(tokens.get(currentIndex).toString().equals("(1,4)")){//dim
@@ -152,28 +146,23 @@ public class ParserTree {
             Node typeNode = type();
             descriptionNode.addChild(typeNode);
         }else {
-            System.err.println("Вмессто dim "+ tokens.get(currentIndex).toString());
-            System.exit(1);
+            throw new Exception("Синтаксическая ошибка: Вмессто dim "+ tokens.get(currentIndex).toString());
         }
         return descriptionNode;
     }
-    public Node identificator(){
+    public Node identificator() throws Exception {
         //<идентификатор>::= <буква> {<буква> | <цифра>}
-        Node identificatorNode = new Node("Identifier");
         if(tokens.get(currentIndex).getTableid().equals("4")){
             if (TI.containsValue(Integer.valueOf(tokens.get(currentIndex).getValue()))){
                 return new Node("Identifier", currentToken.toString());
             }else {
-                System.err.println("Такого нет идентификатораа " + tokens.get(currentIndex).toString());
-                System.exit(1);
+                throw new Exception ("Синтаксическая ошибка: Нет такого идентификатораа " + tokens.get(currentIndex).toString());
             }
         }else {
-            System.err.println("Не идентификатор");
-            System.exit(1);
+            throw new Exception ("Синтаксическая ошибка: Не идентификатор"+currentToken);
         }
-        return null;
     }
-    public Node type(){
+    public Node type() throws Exception {
         //<тип>::= int | float | bool
         Node typeNode = new Node("Type");
         if(tokens.get(currentIndex).toString().equals("(1,5)")){
@@ -183,12 +172,11 @@ public class ParserTree {
         }else if(tokens.get(currentIndex).toString().equals("(1,7)")){
             typeNode.addChild(new Node("bool"));
         }else {
-            System.err.println("Не тип данных");
-            System.exit(1);
+            throw new Exception ("Синтаксическая ошибка: Не тип данных"+currentToken);
         }
         return typeNode;
     }
-    public Node operator() {
+    public Node operator() throws Exception {
             /*<оператор>::= <составной> | <присваивания> | <условный> |
             <фиксированного_цикла> | <условного_цикла> | <ввода> |
             <вывода>*/
@@ -215,12 +203,11 @@ public class ParserTree {
             Node inputOperatorNode = inputOperator(); // Разбор оператора ввода
             operatorNode.addChild(inputOperatorNode);
         } else {
-            System.err.println("Неизвестный оператор: " + tokens.get(currentIndex));
-            System.exit(1);
+            throw new Exception ("Синтаксическая ошибка: Неизвестный оператор: " + tokens.get(currentIndex));
         }
         return operatorNode;
     }
-    public Node fixedOperator(){//фикссированный
+    public Node fixedOperator() throws Exception {//фикссированный
         //<фиксированного_цикла>::= for <присваивания> to <выражение> do
         //<оператор>
         gl();
@@ -235,17 +222,15 @@ public class ParserTree {
                 Node operatorNode = operator();
                 fixedOperatorNode.addChild(operatorNode);
             }else {
-                System.err.println("Ожидалось do, а получили "+ tokens.get(currentIndex).toString());
-                System.exit(1);
+                throw new Exception ("Синтаксическая ошибка: Ожидалось do, а получили "+ tokens.get(currentIndex).toString());
             }
         }else {
-            System.err.println("Ожидалось to, а получили "+ tokens.get(currentIndex).toString());
-            System.exit(1);
+            throw new Exception ("Синтаксическая ошибка: Ожидалось to, а получили "+ tokens.get(currentIndex).toString());
         }
         return fixedOperatorNode;
     }
 
-    public Node compoundOperator() {
+    public Node compoundOperator() throws Exception {
         //<составной>::= <оператор> { ( : | перевод строки) <оператор> }
         Node compoundOperatorNode = null;
         Node operatorNode = operator();// Обработка первого оператора
@@ -263,7 +248,7 @@ public class ParserTree {
             return operatorNode;
         }
     }
-    public Node conditionalOperator(){//условный
+    public Node conditionalOperator() throws Exception {//условный
         //<условный>::= if <выражение> then <оператор> [ else <оператор>]
         gl();
         Node conditionalOperatornNode = new Node("conditionalOperator");
@@ -277,12 +262,11 @@ public class ParserTree {
                 conditionalOperatornNode.addChild(operatorNode);
             }
         }else {
-            System.err.println("Ожидался then, " + currentToken);
-            System.exit(1);
+            throw new Exception ("Синтаксическая ошибка: Ожидался then, " + currentToken);
         }
         return conditionalOperatornNode;
     }
-    public Node assignmentOperator(){//оператора присваивания
+    public Node assignmentOperator() throws Exception {//оператора присваивания
         //<присваивания>::= <идентификатор> as <выражение>
         Node assignmentOperatorNode = new Node("AssignmentOperator");
         Node identificatorNode = identificator();
@@ -293,12 +277,11 @@ public class ParserTree {
             Node expressionNode = expression();
             assignmentOperatorNode.addChild(expressionNode);
         }else {
-            System.err.println("Ожидалось as, а получили "+tokens.get(currentIndex).toString());
-            System.exit(1);
+            throw new Exception("Синтаксическая ошибка: Ожидалось as, а получили "+tokens.get(currentIndex).toString());
         }
         return assignmentOperatorNode;
     }
-    public Node conditionalloop(){
+    public Node conditionalloop() throws Exception {
         Node conditionalloopNode = new Node("Conditionalloop");
         gl();
         Node expressionNode = expression();
@@ -307,12 +290,11 @@ public class ParserTree {
             Node operatorNode = operator();
             conditionalloopNode.addChild(operatorNode);
         }else {
-            System.err.println("Ожидалось do" + tokens.get(currentIndex).toString());
-            System.exit(1);
+            throw new Exception ("Синтаксическая ошибка: Ожидалось do" + tokens.get(currentIndex).toString());
         }
         return conditionalloopNode;
     }
-    public Node outputOperator(){//вывод
+    public Node outputOperator() throws Exception {//вывод
         Node outNode  =  new Node("outputOperator");
         gl();
         if(currentToken.equals("(2,19)")){//(
@@ -324,14 +306,9 @@ public class ParserTree {
                     gl();
                     expressionNode  = expression();
                     outNode.addChild(expressionNode);
-                    if (currentToken.equals("(1,1)")) {
-                        System.err.println("Конец программы");
-                        System.exit(1);
-                        break;
-                    }else if(tokens.isEmpty()){
-                        System.err.println("Больше токенов нет");
-                        System.exit(1);
-                    }
+                }
+                if(tokens.get(currentIndex).toString().equals("(2,20)")){
+                    gl();
                 }
             }else {
                 if(tokens.get(currentIndex).toString().equals("(2,20)")){
@@ -340,30 +317,26 @@ public class ParserTree {
             }
 
         }else {
-            gl();
+            throw new Exception("Синтаксическая ошибка: Ожидался (, а приняли"+currentToken);
         }
         return outNode;
     }
-    public Node inputOperator(){
+    public Node inputOperator() throws Exception {
         Node inputNode = new Node("inputOperator");
         gl();
         if(currentToken.equals("(2,19)")){//(
             gl();
-            Node expressionNode = expression();
-            inputNode.addChild(expressionNode);
+            Node identificatorNode = identificator();
+            inputNode.addChild(identificatorNode);
             gl();
             if (currentToken.equals("(2,15)")){//,
-                while (currentToken.equals("(2,15)")){
-                    expressionNode = expression();
-                    inputNode.addChild(expressionNode);
-                    if (currentToken.equals("(1,1)")) {
-                        System.err.println("Конец программы");
-                        System.exit(1);
-                        break;
-                    }else if(tokens.isEmpty()){
-                        System.err.println("Больше токенов нет");
-                        System.exit(1);
-                    }
+                while (currentToken.equals("(2,15)")) {
+                    gl();
+                    identificatorNode = identificator();
+                    gl();
+                    inputNode.addChild(identificatorNode);
+                }if(tokens.get(currentIndex).toString().equals("(2,20)")){//)
+                    gl();
                 }
             }else {
                 if(tokens.get(currentIndex).toString().equals("(2,20)")){//)
@@ -371,11 +344,11 @@ public class ParserTree {
                 }
             }
         }else {
-            gl();
+                throw new Exception("Синтаксическая ошибка: Ожидался (, а приняли"+currentToken);
         }
         return inputNode;
     }
-    public Node expression(){
+    public Node expression() throws Exception {
         //выражение
         Node expressionNode = new Node("Expression");
         Node operandNode = operand();
@@ -392,7 +365,7 @@ public class ParserTree {
         }
         return expressionNode;
     }
-    public Node operand(){
+    public Node operand() throws Exception {
         //операнд
         Node operandNode = new Node("Operand");
         Node termNode = term();
@@ -409,7 +382,7 @@ public class ParserTree {
         }
         return operandNode;
     }
-    public Node term(){
+    public Node term() throws Exception {
         //слагаемое
         Node termNode = new Node("Term");
         Node factorNode = factor();
@@ -426,7 +399,7 @@ public class ParserTree {
         }
         return termNode;
     }
-    public Node factor() {
+    public Node factor() throws Exception {
         //<множитель>::= <идентификатор> | <число> | <логическая_константа> | <унарная_операция> <множитель> | « (»<выражение>«)»
         Node factorNode = new Node("Factor");
         if (tokens.get(currentIndex).getTableid().equals("4")) { // Идентификатор
@@ -453,12 +426,10 @@ public class ParserTree {
             if (tokens.get(currentIndex).toString().equals("(2,20)")) { // )
                 gl(); // Пропускаем закрывающую скобку
             } else {
-                System.err.println("Ошибка: ожидается ')'");
-                System.exit(1);
+                throw new Exception("Синтаксическая ошибка: Ошибка: ожидается ')', а получили"+currentToken);
             }
         } else {
-            System.err.println("Ошибка: неизвестный множитель " + tokens.get(currentIndex));
-            System.exit(1);
+            throw new Exception ("Синтаксическая ошибка: Ошибка: неизвестный множитель " + tokens.get(currentIndex));
         }
         return factorNode;
     }
@@ -482,11 +453,11 @@ public class ParserTree {
                 token.toString().equals("(2,11)") || // del
                 token.toString().equals("(2,12)");   // &&
     }
-    public void saveAstToFile(Node rootNode, String filePath) {
+    public void saveAstToFile(Node rootNode, String filePath) throws Exception {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             writer.write(rootNode.getTreeAsString(0));
         } catch (IOException e) {
-            System.err.println("Ошибка при сохранении AST в файл: " + e.getMessage());
+            throw new Exception ("Синтаксическая ошибка: Ошибка при сохранении AST в файл: " + e.getMessage());
         }
     }
 

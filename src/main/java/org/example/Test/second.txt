@@ -1,0 +1,5 @@
+begin var dim x, y, i, result float; y as 10.1010/*
+ */;i as 7.9E+2: result as x add y; write (result)
+  if x NEQ i then result as x || 5.5 else result as y
+   write (result); for i as 1.0 to 3.0 do result as result umn i
+    write (result); while result NEQ 2.0 do result as 2.0; write (result) end

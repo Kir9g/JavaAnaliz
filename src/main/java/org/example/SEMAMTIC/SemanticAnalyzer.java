@@ -16,11 +16,11 @@ public class SemanticAnalyzer {
         this.TypesOfVariables =varible_types;
     }
 
-    public void analyze() {
+    public void analyze() throws Exception {
         visit(parseTree);
     }
 
-    private void visit(Node node) {
+    private void visit(Node node) throws Exception {
         String nodeType = node.getNodeType();
         System.out.println(nodeType);
         switch (nodeType) {
@@ -51,24 +51,27 @@ public class SemanticAnalyzer {
             case "Conditionalloop":
                 handleConditionalloop(node);
                 break;
+            case "inputOperator":
+                inputOperator(node);
+                break;
             default:
-                throw new RuntimeException("Unknown node type: " + nodeType);
+                throw new Exception("Семантическая ошибка: Unknown node type: " + nodeType);
         }
     }
 
-    private void handleConditionalloop(Node node) {
+    private void handleConditionalloop(Node node) throws Exception {
         if (node.getChildren().size()!=2){
-            throw new IllegalStateException("Неправильная конструкция while"+ node);
+            throw new Exception("Семантическая ошибка: Неправильная конструкция while"+ node);
         }
 
         String expression = evaluate_expression(node.getChildren().get(0));
         if (!expression.equals("bool")){
-            throw new IllegalStateException("В while должно быть выражение типа bool, а не "+expression);
+            throw new Exception("Семантическая ошибка: В while должно быть выражение типа bool, а не "+expression);
         }
         handleOperator(node.getChildren().get(1));
     }
 
-    private void handleFixedOperator(Node node) {
+    private void handleFixedOperator(Node node) throws Exception {
 
         List<Node> childrens = node.getChildren();
 
@@ -77,70 +80,70 @@ public class SemanticAnalyzer {
         String expression = evaluate_expression(childrens.get(1));
 
         if (operation!=expression){
-            throw new RuntimeException("Несоответствие типов в фиксированном цикле: операции "+operation+", выражения "+expression+"");
+            throw new Exception("Семантическая ошибка: Несоответствие типов в фиксированном цикле: операции "+operation+", выражения "+expression+"");
         }
 
         handleOperator(childrens.get(2));
 
     }
 
-    private void handleConditionalOperator(Node node) {
+    private void handleConditionalOperator(Node node) throws Exception {
 
         String Expression = evaluate_expression(node.getChildren().get(0));
 
         if (Expression!= "bool"){
-            throw new IllegalStateException("Выражение не bool, a "+Expression);
+            throw new Exception("Семантическая ошибка: Выражение не bool, a "+Expression);
         }
         for(int i = 1;i<node.getChildren().size();i++){
             visit(node.getChildren().get(i));
         }
     }
 
-    private void handleOutputOperator(Node node) {
+    private void handleOutputOperator(Node node) throws Exception {
 
         for (int i=0;i<node.getChildren().size();i++){
            evaluate_expression(node.getChildren().get(i));
         }
     }
 
-    private void handleCompoundOperator(Node node) {
+    private void handleCompoundOperator(Node node) throws Exception {
 
         for (Node child : node.getChildren()) {
             visit(child);
         }
     }
 
-    private void handleOperator(Node node) {
+    private void handleOperator(Node node) throws Exception {
 
         for (Node child : node.getChildren()) {
             visit(child);
         }
     }
     //<присваивания>::= <идентификатор> as <выражение>
-    private String handleAssignment(Node node) {
+    private String handleAssignment(Node node) throws Exception {
 
         List<Node> children = node.getChildren();
         if (children.size()!=2){
-            throw new IllegalStateException("Ошибка синтаксиса: оператор присваивания должен иметь ровно 2 дочерних узла, но найдено: " + children.size());
+            throw new Exception("Семантическая ошибка: Ошибка синтаксиса: оператор присваивания должен иметь ровно 2 дочерних узла, но найдено: " + children.size());
         }
         Node identifierNode = children.get(0);
         Node expressionNode = children.get(1);
 
 
         if (!declaration_identifier.contains(identifierNode.getValue())){
-            throw new IllegalStateException("Идентификатор не был объявлен "+identifierNode.getValue());
+            throw new Exception("Семантическая ошибка: Идентификатор не был объявлен "+identifierNode.getValue());
         }
         String left = checkType(identifierNode);
         String right = evaluate_expression(expressionNode);
 
         if (left!=right){
-            throw new IllegalStateException("Несоответствие типов: слева "+left+", справа "+right+"");
+            throw new Exception("Семантическая ошибка: Несоответствие типов: слева "+left+", справа "+right+"");
         }
 
         return left;
     }
     //programm
-    private void handleProgram(Node node) {
+    private void handleProgram(Node node) throws Exception {
 
         for (Node child : node.getChildren()) {
             visit(child);
@@ -148,29 +151,37 @@ public class SemanticAnalyzer {
     }
 
     //описание
-    private void handleDescription(Node node) {
+    private void handleDescription(Node node) throws Exception {
 
         for (Node child : node.getChildren()) {
             if (child.getNodeType().equals("Identifier")){
                 if (!declaration_identifier.contains(child.getValue())) {
                     declaration_identifier.add(child.getValue());
                 }else {
-                    throw new IllegalStateException("Данный идентификатор уже был инициализирован"+child.getValue());
+                    throw new Exception("Семантическая ошибка: Данный идентификатор уже был инициализирован"+child.getValue());
                 }
             }else if(child.getNodeType().equals("Type")){
                 type = child.getChildren().get(0).getNodeType();
             }
         }
     }
-    private String checkType(Node node){
-
-        String value = node.getValue();
-        initializedVariables.add(value);
-
-
-        return type;
+    private String checkType(Node node) throws Exception {
+        if (declaration_identifier.contains(node.getValue())) {
+            String value = node.getValue();
+            initializedVariables.add(value);
+            return type;
+        }else {
+            throw new Exception("Семантическая ошибка: Переменная не объявлена "+ node.getValue());
+        }
     }
-    private String evaluate_expression(Node node){
+
+    private void inputOperator(Node node) throws Exception {
+        for (Node child : node.getChildren()) {
+            checkType(child);
+        }
+    }
+
+    private String evaluate_expression(Node node) throws Exception {
         if (node.getNodeType().equals("Expression")&&node.getValue()==null
                 ||node.getNodeType().equals("Operand")&&node.getValue()==null
                 ||node.getNodeType().equals("Term")&&node.getValue()==null
@@ -195,7 +206,7 @@ public class SemanticAnalyzer {
             return getType(node);
         }
     }
-    private String evaluate_operation(Node node){
+    private String evaluate_operation(Node node) throws Exception {
         String OperandType;
         if (!isRelationOperator(node)) {
            OperandType = evaluate_expression(node.getChildren().get(0));
@@ -209,7 +220,7 @@ public class SemanticAnalyzer {
                 return "float";
             }
             if (childType!=OperandType){
-                throw new IllegalStateException("Несоответствие типов в операции "+ node.getNodeType() +": "+OperandType+" и "+ childType+"");
+                throw new Exception("Семантическая ошибка: Несоответствие типов в операции "+ node.getNodeType() +": "+OperandType+" и "+ childType+"");
             }
         }
         return node.getNodeType().equals("RelationOperator")
@@ -217,7 +228,7 @@ public class SemanticAnalyzer {
                 ? "bool" : OperandType;
     }
 
-    private String getType(Node node){
+    private String getType(Node node) throws Exception {
         if (node.getNodeType().equals("Identifier")){
             return type;
         }else if (node.getNodeType().equals("Number")){
@@ -226,12 +237,12 @@ public class SemanticAnalyzer {
             try {
                 key = Integer.parseInt(value.substring(value.lastIndexOf(',') + 1, value.length() - 1));
             } catch (NumberFormatException e) {
-                throw new IllegalStateException("Не удалось извлечь номер ключа из значения: " + value, e);
+                throw new Exception("Семантическая ошибка: Не удалось извлечь номер ключа из значения: " + value, e);
             }
             // Проверяем, есть ли этот ключ в TypesOfVariables
             String variableType = TypesOfVariables.get(key);
             if (variableType == null) {
-                throw new IllegalStateException("Тип для переменной с ключом " + key + " не найден.");
+                throw new Exception("Семантическая ошибка: Тип для переменной с ключом " + key + " не найден.");
             }
 
 

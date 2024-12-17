@@ -1,0 +1,4 @@
+begin /*
+*/ var dim a,b,c,d int/*
+ */; read(a,b): d as a add c; if a LOWT b then b as a else c as b: for d as a to d do d as d disa 1
+ write(d,c) ; while a LOWE b do a as a umn 2:write(a); write(a,b,c,d) end

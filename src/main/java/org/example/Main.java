@@ -15,13 +15,13 @@ import java.util.HashMap;
 import static org.example.LEXER.Lexer.*;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
         Instant start = Instant.now();
         try {
             Lexer.run();
             Instant end = Instant.now();
             Duration duration = Duration.between(start, end);
-            System.out.printf("Семантика выполнена за %.3f миллисекунд%n", duration.toNanos() / 1_000_000.0);
+            System.out.printf("Лексика выполнена за %.3f миллисекунд%n", duration.toNanos() / 1_000_000.0);
             System.out.println("TN:"+Lexer.TN + "\n");
             System.out.println("Числа в бинарном представленнии");
             System.out.println("TI:"+Lexer.TI + "\n");

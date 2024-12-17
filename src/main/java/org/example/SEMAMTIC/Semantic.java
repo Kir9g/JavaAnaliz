@@ -7,7 +7,7 @@ import java.time.Instant;
 import java.util.HashMap;
 
 public class Semantic {
-    public static void run(Node parentNode, HashMap<Integer, String> varible_types){
+    public static void run(Node parentNode, HashMap<Integer, String> varible_types) throws Exception {
         Instant start = Instant.now();
 
         SemanticAnalyzer semanticAnalyzer = new SemanticAnalyzer(parentNode,varible_types);

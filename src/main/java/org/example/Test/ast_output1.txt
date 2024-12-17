@@ -1,0 +1,144 @@
+Programm
+  Description
+    Identifier: (4,1)
+    Identifier: (4,2)
+    Identifier: (4,3)
+    Identifier: (4,4)
+    Type
+      float
+  operator
+    AssignmentOperator
+      Identifier: (4,2)
+      Expression
+        Operand
+          Term
+            Factor
+              Number: (3,1)
+  compoundOperator
+    operator
+      AssignmentOperator
+        Identifier: (4,3)
+        Expression
+          Operand
+            Term
+              Factor
+                Number: (3,2)
+    operator
+      AssignmentOperator
+        Identifier: (4,4)
+        Expression
+          Operand: (2,7)
+            Term
+              Factor
+                Identifier: (4,1)
+            AdditionOperator: (2,7)
+              Term
+                Factor
+                  Identifier: (4,2)
+  compoundOperator
+    operator
+      outputOperator
+        Expression
+          Operand
+            Term
+              Factor
+                Identifier: (4,4)
+    operator
+      conditionalOperator
+        Expression: (2,1)
+          Operand
+            Term
+              Factor
+                Identifier: (4,1)
+          RelationOperator: (2,1)
+            Operand
+              Term
+                Factor
+                  Identifier: (4,3)
+        operator
+          AssignmentOperator
+            Identifier: (4,4)
+            Expression
+              Operand: (2,9)
+                Term
+                  Factor
+                    Identifier: (4,1)
+                AdditionOperator: (2,9)
+                  Term
+                    Factor
+                      Number: (3,3)
+        operator
+          AssignmentOperator
+            Identifier: (4,4)
+            Expression
+              Operand
+                Term
+                  Factor
+                    Identifier: (4,2)
+    operator
+      outputOperator
+        Expression
+          Operand
+            Term
+              Factor
+                Identifier: (4,4)
+  compoundOperator
+    operator
+      FixedOperator
+        AssignmentOperator
+          Identifier: (4,3)
+          Expression
+            Operand
+              Term
+                Factor
+                  Number: (3,4)
+        Expression
+          Operand
+            Term
+              Factor
+                Number: (3,5)
+        operator
+          AssignmentOperator
+            Identifier: (4,4)
+            Expression
+              Operand
+                Term: (2,10)
+                  Factor
+                    Identifier: (4,4)
+                  MultiplicationOperator: (2,10)
+                    Factor
+                      Identifier: (4,3)
+    operator
+      outputOperator
+        Expression
+          Operand
+            Term
+              Factor
+                Identifier: (4,4)
+  operator
+    Conditionalloop
+      Expression: (2,1)
+        Operand
+          Term
+            Factor
+              Identifier: (4,4)
+        RelationOperator: (2,1)
+          Operand
+            Term
+              Factor
+                Number: (3,6)
+      operator
+        AssignmentOperator
+          Identifier: (4,4)
+          Expression
+            Operand
+              Term
+                Factor
+                  Number: (3,6)
+  operator
+    outputOperator
+      Expression
+        Operand
+          Term
+            Factor
+              Identifier: (4,4)

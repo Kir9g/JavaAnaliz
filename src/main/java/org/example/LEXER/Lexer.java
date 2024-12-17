@@ -21,7 +21,7 @@ public class Lexer {
 
     static {
         try {
-            fileInputStream = new FileInputStream("src/main/resources/programm.txt");
+            fileInputStream = new FileInputStream("src/main/java/org/example/Test/third");
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -42,7 +42,7 @@ public class Lexer {
     static boolean canread = true;
     public static HashMap<Integer,String> variable_types = new HashMap<>();
 
-    public static void run() throws IOException {
+    public static void run() throws Exception {
         gc();
         while (state != V && state!= ER) {
             switch (state){
@@ -127,7 +127,7 @@ public class Lexer {
                             out(2,z);
                             state = H;
                             break;
-                        }else {
+                        } else {
                             look(TI);
                             if (z!=0){
                                 out(4,z);
@@ -438,9 +438,6 @@ public class Lexer {
                         look(TN);
                         if(z!=0){
                             put(TN);
-
-
-
                             out(3,z);
                             state = H;
                         }else {
@@ -450,7 +447,7 @@ public class Lexer {
                             state = H;
                         }
                     }
-                    else if(TlCheck()){
+                    else if(TlCheck()||CH=='/'){
                         look(TN);
                         if(z!=0) {
                             out(3, z);
@@ -677,32 +674,28 @@ public class Lexer {
 
                 case ER -> {
                     fileInputStream.close();
-                    System.err.println("ER");
-                    break;
+                    throw new Exception("ER "+S);
                 }
                 case V ->{
-                    System.out.println("Закончили");
                     fileInputStream.close();
+                    FileOutputStream outputStream = new FileOutputStream("src/main/resources/lexem2.txt");
+
+                    // Преобразование списка в строку без скобок и запятых
+                    StringBuilder stringBuilder = new StringBuilder();
+                    for (Token token : lexemes) {
+                        stringBuilder.append(token.toString()); // Добавляем токены с пробелом между ними
+                    }
+                    String tokenString = stringBuilder.toString().trim(); // Убираем лишний пробел в конце
+
+                    // Запись в файл
+                    outputStream.write(tokenString.getBytes());
+                    outputStream.close();
                 }
             }
         }
-        if(state == V) {
+        if (state == ER){
             fileInputStream.close();
-            FileOutputStream outputStream = new FileOutputStream("src/main/resources/lexem.txt");
-
-            // Преобразование списка в строку без скобок и запятых
-            StringBuilder stringBuilder = new StringBuilder();
-            for (Token token : lexemes) {
-                stringBuilder.append(token.toString()); // Добавляем токены с пробелом между ними
-            }
-            String tokenString = stringBuilder.toString().trim(); // Убираем лишний пробел в конце
-
-            // Запись в файл
-            outputStream.write(tokenString.getBytes());
-            outputStream.close();
-        }else {
-            fileInputStream.close();
-            System.out.println("ОШИБКА");
+            throw new Exception("Лексическая ошибка "+S);
         }
     }
 
