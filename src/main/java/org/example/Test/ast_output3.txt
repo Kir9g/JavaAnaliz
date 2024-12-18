@@ -1,0 +1,164 @@
+Programm
+  Description
+    Identifier: (4,1)
+    Identifier: (4,2)
+    Identifier: (4,3)
+    Type
+      int
+  operator
+    AssignmentOperator
+      Identifier: (4,1)
+      Expression
+        Operand
+          Term
+            Factor
+              Number: (3,1)
+  compoundOperator
+    operator
+      AssignmentOperator
+        Identifier: (4,2)
+        Expression
+          Operand
+            Term
+              Factor
+                Number: (3,2)
+    operator
+      AssignmentOperator
+        Identifier: (4,3)
+        Expression
+          Operand: (2,9)
+            Term
+              Factor
+                Identifier: (4,1)
+            AdditionOperator: (2,9)
+              Term
+                Factor
+                  Identifier: (4,2)
+  compoundOperator
+    operator
+      outputOperator
+        Expression
+          Operand
+            Term
+              Factor
+                Identifier: (4,3)
+    operator
+      conditionalOperator
+        Expression: (2,3)
+          Operand
+            Term
+              Factor
+                Identifier: (4,1)
+          RelationOperator: (2,3)
+            Operand
+              Term
+                Factor
+                  Identifier: (4,2)
+          RelationOperator: (2,3)
+            Operand
+              Term
+                Factor
+                  Identifier: (4,3)
+        operator
+          AssignmentOperator
+            Identifier: (4,3)
+            Expression
+              Operand: (2,7)
+                Term
+                  Factor
+                    Identifier: (4,1)
+                AdditionOperator: (2,7)
+                  Term
+                    Factor
+                      Number: (3,3)
+                AdditionOperator: (2,8)
+                  Term
+                    Factor
+                      Number: (3,3)
+        operator
+          Conditionalloop
+            Expression: (2,3)
+              Operand
+                Term
+                  Factor
+                    Identifier: (4,3)
+              RelationOperator: (2,3)
+                Operand
+                  Term
+                    Factor
+                      Number: (3,4)
+            operator
+              AssignmentOperator
+                Identifier: (4,3)
+                Expression
+                  Operand
+                    Term: (2,10)
+                      Factor
+                        Identifier: (4,3)
+                      MultiplicationOperator: (2,10)
+                        Factor
+                          Number: (3,4)
+  compoundOperator
+    operator
+      FixedOperator
+        AssignmentOperator
+          Identifier: (4,2)
+          Expression
+            Operand
+              Term
+                Factor
+                  Number: (3,5)
+        Expression
+          Operand
+            Term
+              Factor
+                Number: (3,6)
+        operator
+          AssignmentOperator
+            Identifier: (4,3)
+            Expression
+              Operand
+                Term: (2,10)
+                  Factor
+                    Identifier: (4,3)
+                  MultiplicationOperator: (2,10)
+                    Factor
+                      Identifier: (4,4)
+    operator
+      outputOperator
+        Expression
+          Operand
+            Term
+              Factor
+                Identifier: (4,3)
+  operator
+    Conditionalloop
+      Expression: (2,5)
+        Operand
+          Term
+            Factor
+              Identifier: (4,3)
+        RelationOperator: (2,5)
+          Operand
+            Term
+              Factor
+                Number: (3,4)
+      operator
+        AssignmentOperator
+          Identifier: (4,3)
+          Expression
+            Operand: (2,8)
+              Term
+                Factor
+                  Identifier: (4,3)
+              AdditionOperator: (2,8)
+                Term
+                  Factor
+                    Number: (3,5)
+  operator
+    outputOperator
+      Expression
+        Operand
+          Term
+            Factor
+              Identifier: (4,3)

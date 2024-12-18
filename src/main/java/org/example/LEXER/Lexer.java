@@ -21,7 +21,7 @@ public class Lexer {
 
     static {
         try {
-            fileInputStream = new FileInputStream("src/main/java/org/example/Test/programm.txt");
+            fileInputStream = new FileInputStream("src/main/java/org/example/Test/six.txt");
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -678,29 +678,33 @@ public class Lexer {
                 }
                 case V ->{
                     fileInputStream.close();
-                    FileOutputStream outputStream = new FileOutputStream("src/main/resources/lexem2.txt");
-
-                    // Преобразование списка в строку без скобок и запятых
-                    StringBuilder stringBuilder = new StringBuilder();
-                    for (Token token : lexemes) {
-                        stringBuilder.append(token.toString()); // Добавляем токены с пробелом между ними
-                    }
-                    String tokenString = stringBuilder.toString().trim(); // Убираем лишний пробел в конце
-
-                    // Запись в файл
-                    outputStream.write(tokenString.getBytes());
-                    outputStream.close();
+//                    FileOutputStream outputStream = new FileOutputStream("src/main/resources/lexem2.txt");
+//
+//                    // Преобразование списка в строку без скобок и запятых
+//                    StringBuilder stringBuilder = new StringBuilder();
+//                    for (Token token : lexemes) {
+//                        stringBuilder.append(token.toString()); // Добавляем токены с пробелом между ними
+//                    }
+//                    String tokenString = stringBuilder.toString().trim(); // Убираем лишний пробел в конце
+//
+//                    // Запись в файл
+//                    outputStream.write(tokenString.getBytes());
+//                    outputStream.close();
                 }
             }
         }
         if (state == ER){
             fileInputStream.close();
-            throw new Exception("Лексическая ошибка: Встретилась ошибка в "+S+" неизвестный символ "+CH);
+            if (canread) {
+                throw new Exception("Лексическая ошибка: Встретилась ошибка в " + S + " неизвестный символ " + CH);
+            }else {
+                throw new Exception("Ожидался end");
+            }
         }
     }
 
 
-    static void gc() throws IOException {
+    static void gc() throws Exception {
         int read = fileInputStream.read();
         if (read != -1) {
             CH = (char) read;
@@ -789,12 +793,12 @@ public class Lexer {
                 break;
             }
         }
-        String key = findKeyByValue(table,v);
-        if(!key.isEmpty()){
-            System.out.println("out: ("+ t + ","+ v +"):" + key);
-        }else {
-            System.out.println("out: "+ t + ","+ v +"):" + "key is not found");
-        }
+//        String key = findKeyByValue(table,v);
+////        if(!key.isEmpty()){
+////            System.out.println("out: ("+ t + ","+ v +"):" + key);
+////        }else {
+////            System.out.println("out: "+ t + ","+ v +"):" + "key is not found");
+////        }
     }
 
 }

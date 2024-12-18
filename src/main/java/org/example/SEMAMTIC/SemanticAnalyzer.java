@@ -156,7 +156,7 @@ public class SemanticAnalyzer {
                 if (!declaration_identifier.contains(child.getValue())) {
                     declaration_identifier.add(child.getValue());
                 }else {
-                    throw new Exception("Семантическая ошибка: Данный идентификатор уже был инициализирован"+child.getValue());
+                    throw new Exception("Семантическая ошибка: Данный идентификатор уже был объявлен"+child.getValue());
                 }
             }else if(child.getNodeType().equals("Type")){
                 type = child.getChildren().get(0).getNodeType();
@@ -199,8 +199,9 @@ public class SemanticAnalyzer {
                 ||node.getNodeType().equals("MultiplicationOperator")){
 
             return evaluate_operation(node);
-        }
-        else {
+        }else if (node.getNodeType().equals("bool")){
+            return "bool";
+        }else {
             return getType(node);
         }
     }
@@ -237,7 +238,11 @@ public class SemanticAnalyzer {
 
     private String getType(Node node) throws Exception {
         if (node.getNodeType().equals("Identifier")){
-            return type;
+            if (declaration_identifier.contains(node.getValue())) {
+                return type;
+            }else {
+                throw new Exception("Семантическая ошибка: идентификатор не был объявлен"+node.getValue());
+            }
         }else if (node.getNodeType().equals("Number")){
             String value = node.getValue();
             int key;

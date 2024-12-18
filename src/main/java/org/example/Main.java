@@ -23,17 +23,26 @@ public class Main {
             Lexer.run();
             Instant end = Instant.now();
             Duration duration = Duration.between(start, end);
-            System.out.println("\n\n\n");
+            System.out.println();
             System.out.printf("Лексика выполнена успешно за %.3f миллисекунд%n", duration.toNanos() / 1_000_000.0);
 //            System.out.println("TN:"+Lexer.TN + "\n");
-            System.out.println("Числа: ");
-            for (Map.Entry<String, Integer> entry : TN.entrySet()) {
-                System.out.println("("+entry.getKey() + ", " + entry.getValue() + ") ");
-            }
-            System.out.print("Идентификаторы: ");
-            for (Map.Entry<String, Integer> entry : TI.entrySet()) {
-                System.out.println("("+entry.getKey() + ", " + entry.getValue() + ") ");
-            }
+//            System.out.println("Числа: ");
+//            for (Map.Entry<String, Integer> entry : TN.entrySet()) {
+//                System.out.println("("+entry.getKey() + ", " + entry.getValue() + ") ");
+//            }
+//            System.out.print("Идентификаторы: ");
+//            for (Map.Entry<String, Integer> entry : TI.entrySet()) {
+//                System.out.println("("+entry.getKey() + ", " + entry.getValue() + ") ");
+//            }
+//            System.out.print("Ключевые слова: ");
+//            for (Map.Entry<String, Integer> entry : TW.entrySet()) {
+//                System.out.println("("+entry.getKey() + ", " + entry.getValue() + ") ");
+//            }
+//            System.out.print("Ограничители: ");
+//            for (Map.Entry<String, Integer> entry : TI.entrySet()) {
+//                System.out.println("("+entry.getKey() + ", " + entry.getValue() + ") ");
+//            }
+
             //System.out.println("Цифры в машиннов коде: ");
 //            Lexer.TN.forEach((key, value) -> {
 //                StringBuilder binaryKey = new StringBuilder();

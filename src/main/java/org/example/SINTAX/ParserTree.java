@@ -107,23 +107,23 @@ public class ParserTree {
                 programmNode.addChild(description);
                 gl();
             } else {
-                throw new Exception("Синтаксическая ошибка: Ожидался токен var"+tokens.get(currentIndex).toString());
+                throw new Exception("Синтаксическая ошибка: Ожидался var "+tokens.get(currentIndex).toString());
             }
             while (!tokens.get(currentIndex).toString().equals("(1,1)")) {
                 if (currentToken.equals("(2,18)")) {
                     Node operatorNode = compoundOperator();
                     programmNode.addChild(operatorNode);
                 }else {
-                    throw new Exception("Синтаксическая ошибка: Ожидалось ;, а получили " + previousToken+currentToken);
+                    throw new Exception("Синтаксическая ошибка: Ожидалось ; , а получили " + previousToken+currentToken);
                 }
             }
             if (tokens.get(currentIndex).toString().equals("(1,1)")){
-                System.out.println("Закончено");
+
             }else {
-                throw new Exception("Синтаксическая ошибка: Ожидался токен End");
+                throw new Exception("Синтаксическая ошибка: Ожидался  End");
             }
         } else {
-            throw new Exception("Синтаксическая ошибка: Ожидался токен begin");
+            throw new Exception("Синтаксическая ошибка: Ожидался begin");
         }
         return programmNode;
     }
@@ -156,7 +156,7 @@ public class ParserTree {
             if (TI.containsValue(Integer.valueOf(tokens.get(currentIndex).getValue()))){
                 return new Node("Identifier", currentToken.toString());
             }else {
-                throw new Exception ("Синтаксическая ошибка: Нет такого идентификатораа " + tokens.get(currentIndex).toString());
+                throw new Exception ("Синтаксическая ошибка: Нет такого идентификатора " + tokens.get(currentIndex).toString());
             }
         }else {
             throw new Exception ("Синтаксическая ошибка: Не идентификатор"+currentToken);
@@ -309,10 +309,14 @@ public class ParserTree {
                 }
                 if(tokens.get(currentIndex).toString().equals("(2,20)")){
                     gl();
+                }else {
+                    throw new Exception("Синтаксическая ошибка: Ожидался ), а приняли "+currentToken);
                 }
             }else {
                 if(tokens.get(currentIndex).toString().equals("(2,20)")){
                     gl();
+                }else {
+                    throw new Exception("Синтаксическая ошибка: Ожидался ), а приняли "+currentToken);
                 }
             }
 
@@ -337,10 +341,14 @@ public class ParserTree {
                     inputNode.addChild(identificatorNode);
                 }if(tokens.get(currentIndex).toString().equals("(2,20)")){//)
                     gl();
+                }else {
+                    throw new Exception("Синтаксическая ошибка: Ожидался ), а приняли "+currentToken);
                 }
             }else {
                 if(tokens.get(currentIndex).toString().equals("(2,20)")){//)
                     gl();
+                }else {
+                    throw new Exception("Синтаксическая ошибка: Ожидался ), а приняли "+currentToken);
                 }
             }
         }else {
@@ -411,7 +419,7 @@ public class ParserTree {
             factorNode.addChild(NumberNode);
             gl();
         } else if (currentToken.equals("(1,17)")||currentToken.equals("(1,18)")){ // Логическая константа
-            Node booleanNode = new Node("boolean");
+            Node booleanNode = new Node("bool");
             booleanNode.setValue(currentToken);
             factorNode.addChild(booleanNode);
             gl();
