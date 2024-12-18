@@ -16,7 +16,7 @@ public class Semantic {
         Instant end = Instant.now();
         Duration duration = Duration.between(start, end);
 
-        System.out.printf("Семантика выполнена за %.3f миллисекунд%n", duration.toNanos() / 1_000_000.0);
+        System.out.printf("Семантика выполнена успешно за %.3f миллисекунд%n", duration.toNanos() / 1_000_000.0);
 
     }
 }

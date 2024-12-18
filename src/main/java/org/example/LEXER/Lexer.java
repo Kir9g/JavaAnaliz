@@ -21,7 +21,7 @@ public class Lexer {
 
     static {
         try {
-            fileInputStream = new FileInputStream("src/main/java/org/example/Test/third");
+            fileInputStream = new FileInputStream("src/main/java/org/example/Test/programm.txt");
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -695,7 +695,7 @@ public class Lexer {
         }
         if (state == ER){
             fileInputStream.close();
-            throw new Exception("Лексическая ошибка "+S);
+            throw new Exception("Лексическая ошибка: Встретилась ошибка в "+S+" неизвестный символ "+CH);
         }
     }
 

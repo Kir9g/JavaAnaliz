@@ -123,9 +123,7 @@ public class SemanticAnalyzer {
     private String handleAssignment(Node node) throws Exception {
 
         List<Node> children = node.getChildren();
-        if (children.size()!=2){
-            throw new Exception("Семантическая ошибка: Ошибка синтаксиса: оператор присваивания должен иметь ровно 2 дочерних узла, но найдено: " + children.size());
-        }
+
         Node identifierNode = children.get(0);
         Node expressionNode = children.get(1);
 
@@ -211,7 +209,16 @@ public class SemanticAnalyzer {
         if (!isRelationOperator(node)) {
            OperandType = evaluate_expression(node.getChildren().get(0));
         }else {
-            OperandType = "bool";
+            Node childdd= node.getChildren().get(0).getChildren().get(0).getChildren().get(0).getChildren().get(0);
+            if (childdd.getNodeType().equals("Identifier")) {
+                if(declaration_identifier.contains(childdd.getValue())){
+                    OperandType = "bool";
+                }else{
+                    throw new Exception("Семантическая ошибка: Переменная не объявлена "+ childdd.getValue());
+                }
+            }else {
+                OperandType = "bool";
+            }
         }
         for (int i = 1;i<node.getChildren().size();i++){
             String childType = evaluate_expression(node.getChildren().get(i));

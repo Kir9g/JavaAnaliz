@@ -21,14 +21,14 @@ public class Syntax {
         Instant end = Instant.now();
         Duration duration = Duration.between(start, end);
 
-        String outputFilePath = "src/main/java/org/example/Test/ast_output2.txt";
+        String outputFilePath = "src/main/java/org/example/Test/ast_output.txt";
         parserTree.saveAstToFile(parentNode, outputFilePath);
 
+        System.out.printf("Семантика выполнена успешно за %.3f миллисекунд%n", duration.toNanos() / 1_000_000.0);
         // Вывод AST в консоль
         System.out.println("AST:");
         parentNode.printTree(0);
 
-        System.out.printf("Семантика выполнена за %.3f миллисекунд%n", duration.toNanos() / 1_000_000.0);
         return parentNode;
     }
 }
