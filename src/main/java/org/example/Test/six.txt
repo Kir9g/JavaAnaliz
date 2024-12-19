@@ -1,1 +1,1 @@
-begin var dim x,y float; x as x umn 2.0 end
+begin var dim x,y int; x as x umn 2 end

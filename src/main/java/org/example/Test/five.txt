@@ -1,5 +1,5 @@
 begin var dim x, y, i, result int/*
  */; read(x,y,i)
   result as x || y; write (result)
-  if a LOWT y LOWT result then result as x disa 5 || 5 else while result LOWT 2 do result as result del 2; for i as 1 to 3 do result as result umn i
+  if x LOWT y LOWT result then result as x disa 5 || 5 else while result LOWT 2 do result as result del 2; for i as 1 to 3 do result as result umn i
     write (result); while result GRT 2 do result as result disa 1; write (result) end

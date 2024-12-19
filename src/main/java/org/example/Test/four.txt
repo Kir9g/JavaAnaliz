@@ -1,5 +1,5 @@
-begin var dim ala, maga, result int/*
+begin var dim ala, maga, result, i int/*
  */; ala as 10 /*
- */;maga as 1010101010B: result as ala || maga; write (result)
+ */;maga as 1010101010B: result as ala || maga;read(i); write (result)
   if ala LOWT maga LOWT result then result as ala add 5 disa 5 else while result LOWT 2 do result as result umn 2; for maga as 1 to 3 do result as result umn i
     write (result); while result GRT 2 do result as result disa 1; write (result) end

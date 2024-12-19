@@ -212,7 +212,7 @@ public class SemanticAnalyzer {
         }else {
             Node childdd= node.getChildren().get(0).getChildren().get(0).getChildren().get(0).getChildren().get(0);
             if (childdd.getNodeType().equals("Identifier")) {
-                if(declaration_identifier.contains(childdd.getValue())){
+                if(declaration_identifier.contains(childdd.getValue())&&initializedVariables.contains(childdd.getValue())){
                     OperandType = "bool";
                 }else{
                     throw new Exception("Семантическая ошибка: Переменная не объявлена "+ childdd.getValue());
@@ -239,7 +239,10 @@ public class SemanticAnalyzer {
     private String getType(Node node) throws Exception {
         if (node.getNodeType().equals("Identifier")){
             if (declaration_identifier.contains(node.getValue())) {
-                return type;
+                if (initializedVariables.contains(node.getValue())) {
+                    return type;
+                }else {
+                    throw new Exception("Семантическая ошибка: идентификатор не был инциализирован"+node.getValue());}
             }else {
                 throw new Exception("Семантическая ошибка: идентификатор не был объявлен"+node.getValue());
             }
