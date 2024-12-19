@@ -261,7 +261,7 @@ public class Lexer {
                         state = NEF;
                     }
                     else if(lowerCH == 'h'){
-                        add();
+//                        add();
                         gc();
                         state = HX;
                     }
@@ -271,7 +271,7 @@ public class Lexer {
                         state = N16;
                     }
                     else if (lowerCH == 'd') {
-                        add();
+//                        add();
                         gc();
                         state = D;
 
@@ -330,7 +330,7 @@ public class Lexer {
                         state = N16;
                     }
                     else if(lowerCH == 'h'){
-                        add();
+//                        add();
                         gc();
                         state = HX;
                     }
@@ -360,7 +360,7 @@ public class Lexer {
                 case D -> {
                     char lowerCH = Character.toLowerCase(CH);
                     if (lowerCH=='h'){
-                        add();
+//                        add();
                         gc();
                         state = HX;
                     }
@@ -793,12 +793,12 @@ public class Lexer {
                 break;
             }
         }
-//        String key = findKeyByValue(table,v);
-////        if(!key.isEmpty()){
-////            System.out.println("out: ("+ t + ","+ v +"):" + key);
-////        }else {
-////            System.out.println("out: "+ t + ","+ v +"):" + "key is not found");
-////        }
+        String key = findKeyByValue(table,v);
+//        if(!key.isEmpty()){
+//            System.out.println("out: ("+ t + ","+ v +"):" + key);
+//        }else {
+//            System.out.println("out: "+ t + ","+ v +"):" + "key is not found");
+//        }
     }
 
 }

@@ -30,6 +30,10 @@ public class Main {
 //            for (Map.Entry<String, Integer> entry : TN.entrySet()) {
 //                System.out.println("("+entry.getKey() + ", " + entry.getValue() + ") ");
 //            }
+//            System.out.println("типы");
+//            for (Map.Entry<Integer, String> entry : variable_types.entrySet()) {
+//                System.out.println("("+entry.getKey() + ", " + entry.getValue() + ") ");
+//            }
 //            System.out.print("Идентификаторы: ");
 //            for (Map.Entry<String, Integer> entry : TI.entrySet()) {
 //                System.out.println("("+entry.getKey() + ", " + entry.getValue() + ") ");

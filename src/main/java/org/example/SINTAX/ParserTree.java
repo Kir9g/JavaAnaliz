@@ -424,7 +424,6 @@ public class ParserTree {
             factorNode.addChild(booleanNode);
             gl();
         } else if (tokens.get(currentIndex).toString().equals("(2,14)")) { // ^
-            System.out.println("Унарная операция: ^");
             factorNode.setValue(currentToken);
             gl();
             factorNode.addChild(factor());// Рекурсивный вызов для обработки множителя

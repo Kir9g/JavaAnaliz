@@ -18,11 +18,13 @@ public class SemanticAnalyzer {
 
     public void analyze() throws Exception {
         visit(parseTree);
+//        System.out.println(initializedVariables);
+//        System.out.println(TypesOfVariables);
     }
 
     private void visit(Node node) throws Exception {
         String nodeType = node.getNodeType();
-        System.out.println(nodeType);
+//        System.out.println(nodeType);
         switch (nodeType) {
             case "Programm":
                 handleProgram(node);
@@ -208,7 +210,11 @@ public class SemanticAnalyzer {
     private String evaluate_operation(Node node) throws Exception {
         String OperandType;
         if (!isRelationOperator(node)) {
-           OperandType = evaluate_expression(node.getChildren().get(0));
+            if (node.getNodeType().equals("MultiplicationOperator")&&node.getValue().equals("(2,11")||
+                    node.getNodeType().equals("Term") &&node.getValue().equals("(2,11)")){
+                return "float";
+            }
+            OperandType = evaluate_expression(node.getChildren().get(0));
         }else {
             Node childdd= node.getChildren().get(0).getChildren().get(0).getChildren().get(0).getChildren().get(0);
             if (childdd.getNodeType().equals("Identifier")) {
@@ -224,7 +230,7 @@ public class SemanticAnalyzer {
         for (int i = 1;i<node.getChildren().size();i++){
             String childType = evaluate_expression(node.getChildren().get(i));
             if (node.getNodeType().equals("MultiplicationOperator")&&node.getValue().equals("(2,11")||
-                    node.getNodeType().equals("Operand") &&node.getValue().equals("(2,11")){
+                    node.getNodeType().equals("Term") &&node.getValue().equals("(2,11")){
                 return "float";
             }
             if (childType!=OperandType){
