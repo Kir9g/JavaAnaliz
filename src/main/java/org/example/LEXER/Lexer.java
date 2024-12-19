@@ -21,7 +21,7 @@ public class Lexer {
 
     static {
         try {
-            fileInputStream = new FileInputStream("src/main/java/org/example/Test/six.txt");
+            fileInputStream = new FileInputStream("src/main/java/org/example/Test/programm.txt");
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }

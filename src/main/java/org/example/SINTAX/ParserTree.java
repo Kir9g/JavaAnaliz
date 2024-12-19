@@ -219,7 +219,7 @@ public class ParserTree {
             Node expressionNode = expression();
             fixedOperatorNode.addChild(expressionNode);
             if(currentToken.equals("(1,15)")){//do
-                Node operatorNode = operator();
+                Node operatorNode = compoundOperator();
                 fixedOperatorNode.addChild(operatorNode);
             }else {
                 throw new Exception ("Синтаксическая ошибка: Ожидалось do, а получили "+ tokens.get(currentIndex).toString());
@@ -255,11 +255,11 @@ public class ParserTree {
         Node expressionNode = expression();
         conditionalOperatornNode.addChild(expressionNode);
         if(currentToken.equals("(1,9)")){//then
-            Node operatorNode = operator();
-            conditionalOperatornNode.addChild(operatorNode);
+            Node compoundOperatorNode = compoundOperator();
+            conditionalOperatornNode.addChild(compoundOperatorNode);
             if(currentToken.equals("(1,10)")){//else
-                operatorNode = operator();
-                conditionalOperatornNode.addChild(operatorNode);
+                Node compoundoperatorNode = compoundOperator();
+                conditionalOperatornNode.addChild(compoundoperatorNode);
             }
         }else {
             throw new Exception ("Синтаксическая ошибка: Ожидался then, " + currentToken);
@@ -287,7 +287,7 @@ public class ParserTree {
         Node expressionNode = expression();
         conditionalloopNode.addChild(expressionNode);
         if(currentToken.equals("(1,15)")) {//do
-            Node operatorNode = operator();
+            Node operatorNode = compoundOperator();
             conditionalloopNode.addChild(operatorNode);
         }else {
             throw new Exception ("Синтаксическая ошибка: Ожидалось do" + tokens.get(currentIndex).toString());
